@@ -2080,9 +2080,9 @@ uni.cox.lvadsupport.infectionrisk.covariates <- c(
 
 # Assessing Univariable Cox Models for all Covariates...
 uni.cox.lvadsupport.infectionrisk <-
-	coxphuni(uni.cox.lvadsupport.infectionrisk.data,
-	         dependent = "Surv(lvad.infection.free.time,lvad.infection_event)",
-	         uni.cox.lvadsupport.infectionrisk.covariates)
+	coxphuni(uni.cox.lvadsupport.infectionrisk.data,                              #data
+	         dependent = "Surv(lvad.infection.free.time,lvad.infection_event)",   #dependent
+	         uni.cox.lvadsupport.infectionrisk.covariates)                        #explanatory
 
 # ... and summarise them in a nice table!
 uni.cox.lvadsupport.infectionrisk %>%
@@ -2768,6 +2768,7 @@ uni.cox.posthtxmortality.taz.mer %>%
 
 ## POSSIBLE SELECTION OF MULTI-DRUG RESISTANT PATHOGEN DERIVED FROM ANTIMICROBIAL TREATMENT
 
+### Dati regressione logistica
 ```{r Logistic_Regression_Data}
 
 ####################################
@@ -2894,6 +2895,10 @@ atb_exposure_90 <-  atb_exposure_function(atb_exposure, atb_var = "atb.90")
 mdro_cases <- mdro_cases %>% 
  filter(mdro_event_date > lvad_date)
 
+###############################################
+#### Atb exposure (30,60,90 days) dataset #### 
+###############################################
+
 atb.mdro.30 <- mdro_cases %>% 
   left_join(atb_exposure_30, by = c("study_id","mdro_event_date"))
 
@@ -2903,13 +2908,57 @@ atb.mdro.60 <- mdro_cases %>%
 atb.mdro.90 <- mdro_cases %>% 
   left_join(atb_exposure_90, by = c("study_id","mdro_event_date"))
   
+###################################################
+#### Baseline covariates dataset #### 
+###################################################
+covariate.table2 <- ptlist %>%
+  left_join_study_id(intermacs.cov) %>%
+  left_join_study_id(infarction.cov) %>%
+  left_join_study_id(lvad.era) %>%
+  left_join_study_id(lvad_mod.cov) 
 
-```
+baseline.covariates <- data %>%
+  filter(is.na(redcap_repeat_instance)) %>%
+  select(study_id,age,bmi, all_of(baseline.cov)) %>% 
+  mutate(across(all_of(baseline.cov), ~ fct_relevel(.x, "No", "Yes"))) %>%
+  left_join(covariate.table2,by = "study_id") 
 
-```{r CRO_univariate_logistic_regression}
+baseline.covariates.data <- mdro_cases %>%
+  left_join(baseline.covariates,by = "study_id") %>%
+  mutate(lvad.support.days = as.numeric(difftime(mdro_event_date, lvad_date, units = "days")))
+ 
+summary(baseline.covariates)
+########################################################
+#### Dataset for multivariate logistic regressions  #### 
+########################################################
+
+atb.mdro.30.data <- atb.mdro.30 %>% 
+  left_join(baseline.covariates,by = "study_id") 
+
+atb.mdro.60.data <- atb.mdro.60 %>% 
+  left_join(baseline.covariates,by = "study_id") 
+
+atb.mdro.90.data <- atb.mdro.90 %>% 
+  left_join(baseline.covariates,by = "study_id") 
+
+covariates2 <- c(
+  "age","bmi", "sex.factor","hyper.factor", "dyslip.factor", "diabetes.factor",
+  "renal_insuff.factor", "smoke.factor", "coronary_dis.factor",
+  "valve_rep.factor", "pm.factor",            #baseline covariates
+  "lvad.support.days",
+  "infarction.cov","intermacs.cov", "lvad.era", "lvad_mod.cov")
+
 predictors <- c("Carbapenems", "Cephalosporins", "Quinolones", 
                 "Aminopenicillin", "AntiMRSA", "Doxycycline", 
                 "TMPSMX", "PiperacillinTazobactam")
+```
+
+### (CRO) Logistica univariata
+```{r CRO_univariate_logistic_regression}
+
+# OUTCOME: sviluppo organismi resistenti ai Carbapenemi (CRO)
+# PREDICTORS: baseline covariates
+# PREDICTORS:esposizione antibiotica (30,60,90 gg)
 
 # Function to fit univariate logistic models for a given dataset
 fit_univariate_models <- function(data, outcome = "CRO", predictors) {
@@ -2921,46 +2970,59 @@ fit_univariate_models <- function(data, outcome = "CRO", predictors) {
   return(models)
 }
 
+# Fit model
+baseline_univariate_models <- fit_univariate_models(baseline.covariates.data, 
+                                                   predictors = covariates2)
 # Fit models for each dataset
 univariate_models_30 <- fit_univariate_models(atb.mdro.30, predictors = predictors)
 univariate_models_60 <- fit_univariate_models(atb.mdro.60, predictors = predictors)
 univariate_models_90 <- fit_univariate_models(atb.mdro.90, predictors = predictors)
 
-# Print summaries for one set (e.g., 30-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 30-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_30)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_30[[var]]))
+# Function to extract summary table from a list of models
+extract_model_summary <- function(models, model_set_name) {
+  bind_rows(lapply(names(models), function(var_name) {
+    model <- models[[var_name]]
+    summary <- tidy(model)
+    summary <- summary %>%
+      filter(term != "(Intercept)") %>%
+      select(term, estimate, p.value) %>%
+      mutate(predictor = var_name,
+             model_set = model_set_name)
+  }))
 }
 
-# Print summaries for one set (e.g., 60-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 60-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_60)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_60[[var]]))
-}
+# Extract summaries from each model set
+summary_baseline <- extract_model_summary(baseline_univariate_models, "Baseline")
+summary_30 <- extract_model_summary(univariate_models_30, "30 days")
+summary_60 <- extract_model_summary(univariate_models_60, "60 days")
+summary_90 <- extract_model_summary(univariate_models_90, "90 days")
 
-# Print summaries for one set (e.g., 90-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 90-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_90)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_90[[var]]))
-}
+# Combine all summaries
+summary_all <- bind_rows(summary_baseline,summary_30, summary_60, summary_90)
+
+# Clean and format
+summary_all <- summary_all %>%
+  select(model_set, predictor, estimate, p.value) %>%
+  mutate(
+    estimate = round(estimate, 3),
+    p.value = signif(p.value, 3)
+  )
+
+# Create flextable
+ft <- flextable(summary_all) %>%
+  set_header_labels(
+    model_set = "Model Set",
+    predictor = "Predictor",
+    estimate = "Coefficient",
+    p.value = "p-value"
+  ) %>%
+  autofit()
+
+ft
 
 ```
 
+### (CRO) Logistica multivariata: esposizione antibiotica (30,60,90 gg) e sviluppo organismi resistenti ai Carbapenemi 
 ```{r CRO_multivariate_logistic_regression}
 
 cro.30.fit <- glm(
@@ -2978,15 +3040,132 @@ CRO ~ Carbapenems + Cephalosporins + Quinolones + Aminopenicillin + AntiMRSA + D
 data = atb.mdro.90 , family = binomial
 )
 
+covariates2 <- c(
+  "age","bmi", "sex.factor","hyper.factor", "dyslip.factor", "diabetes.factor",
+  "renal_insuff.factor", "smoke.factor", "coronary_dis.factor",
+  "valve_rep.factor", "pm.factor",            #baseline covariates
+  "lvad.support.days",
+  "infarction.cov","intermacs.cov", "lvad.era", "lvad_mod.cov")
+
+cro.30.fit <- glm(
+CRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor + lvad.era + Carbapenems + AntiMRSA ,
+data = atb.mdro.30.data , family = binomial
+)
+
+cro.60.fit <- glm(
+CRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor + lvad.era + Carbapenems + AntiMRSA ,
+data = atb.mdro.60.data , family = binomial
+)
+
+cro.90.fit <- glm(
+CRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor + lvad.era + Carbapenems + AntiMRSA ,
+data = atb.mdro.90.data , family = binomial
+)
+
 summary(cro.30.fit)
 summary(cro.60.fit)
 summary(cro.90.fit)
 ```
 
+### (CRO) Generalized Estimating Equations (GEE)
+```{r Generalized Estimating Equations (GEE)}
+
+#accounting for dependent observations
+
+library(geepack)
+
+gee.atb.mdro.30.data <- atb.mdro.30.data %>% 
+    select(CRO, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,study_id) %>%
+  na.omit()
+
+gee.atb.mdro.60.data <- atb.mdro.60.data %>% 
+    select(CRO, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,study_id) %>%
+  na.omit()
+
+gee.atb.mdro.90.data <- atb.mdro.90.data %>% 
+    select(CRO, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,study_id) %>%
+  na.omit()
+
+gee_model.30 <- geeglm(
+  CRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.30.data,
+  corstr = "exchangeable"  
+)
+
+gee_model.60 <- geeglm(
+  CRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.60.data,
+  corstr = "exchangeable"  
+)
+
+gee_model.90 <- geeglm(
+  CRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.90.data,
+  corstr = "exchangeable"  
+)
+
+summary(gee_model.30)
+summary(gee_model.60)
+summary(gee_model.90)
+```
+
+```{r}
+#just for fun... trying Bayesian model..
+
+library(brms)
+
+bayes_re_model <- brm(
+  CRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA + (1 | study_id),
+  family = bernoulli(link = "logit"),
+  data = gee.atb.mdro.30.data, 
+  prior = c(
+    set_prior("normal(0, 2.5)", class = "b"),
+    set_prior("student_t(3, 0, 2.5)", class = "sd")  # for random effect
+  ),
+  chains = 4, iter = 2000, warmup = 500, cores = 4,
+  seed = 42
+)
+
+summary(bayes_re_model)
+
+```
+
+```{r}
+
+# Get posterior summaries
+summary_data <- posterior_summary(bayes_re_model)
+
+# Exponentiate fixed effect estimates to get odds ratios
+posterior_fixed <- as.data.frame(fixef(bayes_re_model))  # only fixed effects
+posterior_fixed$OR <- exp(posterior_fixed$Estimate)
+posterior_fixed$OR_Lower <- exp(posterior_fixed$Q2.5)
+posterior_fixed$OR_Upper <- exp(posterior_fixed$Q97.5)
+
+posterior_fixed
+flextable(posterior_fixed)
+
+```
+
+
+### (MDRO)  Logistica univariata: esposizione antibiotica (30,60,90 gg) e sviluppo organismi multi-resistenti 
 ```{r MDRO_univariate_logistic_regression}
-predictors <- c("Carbapenems", "Cephalosporins", "Quinolones", 
-                "Aminopenicillin", "AntiMRSA", "Doxycycline", 
-                "TMPSMX", "PiperacillinTazobactam")
+
+# OUTCOME: sorganismi multi-resistenti (MDRO)
+# PREDICTORS: baseline covariates
+# PREDICTORS:esposizione antibiotica (30,60,90 gg)
 
 # Function to fit univariate logistic models for a given dataset
 fit_univariate_models <- function(data, outcome = "MDRO", predictors) {
@@ -2998,46 +3177,59 @@ fit_univariate_models <- function(data, outcome = "MDRO", predictors) {
   return(models)
 }
 
+# Fit model
+baseline_univariate_models <- fit_univariate_models(baseline.covariates.data, 
+                                                   predictors = covariates2)
 # Fit models for each dataset
 univariate_models_30 <- fit_univariate_models(atb.mdro.30, predictors = predictors)
 univariate_models_60 <- fit_univariate_models(atb.mdro.60, predictors = predictors)
 univariate_models_90 <- fit_univariate_models(atb.mdro.90, predictors = predictors)
 
-# Print summaries for one set (e.g., 30-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 30-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_30)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_30[[var]]))
+# Function to extract summary table from a list of models
+extract_model_summary <- function(models, model_set_name) {
+  bind_rows(lapply(names(models), function(var_name) {
+    model <- models[[var_name]]
+    summary <- tidy(model)
+    summary <- summary %>%
+      filter(term != "(Intercept)") %>%
+      select(term, estimate, p.value) %>%
+      mutate(predictor = var_name,
+             model_set = model_set_name)
+  }))
 }
 
-# Print summaries for one set (e.g., 60-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 60-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_60)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_60[[var]]))
-}
+# Extract summaries from each model set
+summary_baseline <- extract_model_summary(baseline_univariate_models, "Baseline")
+summary_30 <- extract_model_summary(univariate_models_30, "30 days")
+summary_60 <- extract_model_summary(univariate_models_60, "60 days")
+summary_90 <- extract_model_summary(univariate_models_90, "90 days")
 
-# Print summaries for one set (e.g., 90-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 90-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_90)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_90[[var]]))
-}
+# Combine all summaries
+summary_all <- bind_rows(summary_baseline,summary_30, summary_60, summary_90)
+
+# Clean and format
+summary_all <- summary_all %>%
+  select(model_set, predictor, estimate, p.value) %>%
+  mutate(
+    estimate = round(estimate, 3),
+    p.value = signif(p.value, 3)
+  )
+
+# Create flextable
+ft <- flextable(summary_all) %>%
+  set_header_labels(
+    model_set = "Model Set",
+    predictor = "Predictor",
+    estimate = "Coefficient",
+    p.value = "p-value"
+  ) %>%
+  autofit()
+
+ft
 
 ```
 
+### (MDRO) Logistica multivariata: esposizione antibiotica (30,60,90 gg) e sviluppo organismi multi-resistenti 
 ```{r MDRO_multivariate_logistic_regression}
 
 mdro.30.fit <- glm(
@@ -3061,10 +3253,63 @@ summary(mdro.90.fit)
 
 ```
 
-```{r MRSA_univariate_logistic_regression}
-predictors <- c("Carbapenems", "Cephalosporins", "Quinolones", 
-                "Aminopenicillin", "AntiMRSA", "Doxycycline", 
-                "TMPSMX", "PiperacillinTazobactam")
+### (MDRO) Generalized Estimating Equations (GEE)
+```{r Generalized Estimating Equations (GEE)}
+library(geepack)
+
+gee.atb.mdro.30.data <- atb.mdro.30.data %>% 
+  select(MDRO, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,study_id) %>%
+  na.omit()
+
+gee.atb.mdro.60.data <- atb.mdro.60.data %>% 
+  select(MDRO, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,study_id) %>%
+  na.omit()
+
+gee.atb.mdro.90.data <- atb.mdro.90.data %>% 
+  select(MDRO, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,study_id) %>%
+  na.omit()
+
+gee_model.30 <- geeglm(
+  MDRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.30.data,
+  corstr = "exchangeable"  
+)
+
+gee_model.60 <- geeglm(
+  MDRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.60.data,
+  corstr = "exchangeable"  
+)
+
+gee_model.90 <- geeglm(
+  MDRO ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.90.data,
+  corstr = "exchangeable"  
+)
+
+summary(gee_model.30)
+summary(gee_model.60)
+summary(gee_model.90)
+```
+
+### (MRSA) Logistica univariata
+```{r MDRO_univariate_logistic_regression}
+
+# OUTCOME: sviluppo S.aureus resistente alla meticillina (MRSA)
+# PREDICTORS: baseline covariates
+# PREDICTORS:esposizione antibiotica (30,60,90 gg)
 
 # Function to fit univariate logistic models for a given dataset
 fit_univariate_models <- function(data, outcome = "MRSA", predictors) {
@@ -3076,46 +3321,59 @@ fit_univariate_models <- function(data, outcome = "MRSA", predictors) {
   return(models)
 }
 
+# Fit model
+baseline_univariate_models <- fit_univariate_models(baseline.covariates.data, 
+                                                   predictors = covariates2)
 # Fit models for each dataset
 univariate_models_30 <- fit_univariate_models(atb.mdro.30, predictors = predictors)
 univariate_models_60 <- fit_univariate_models(atb.mdro.60, predictors = predictors)
 univariate_models_90 <- fit_univariate_models(atb.mdro.90, predictors = predictors)
 
-# Print summaries for one set (e.g., 30-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 30-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_30)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_30[[var]]))
+# Function to extract summary table from a list of models
+extract_model_summary <- function(models, model_set_name) {
+  bind_rows(lapply(names(models), function(var_name) {
+    model <- models[[var_name]]
+    summary <- tidy(model)
+    summary <- summary %>%
+      filter(term != "(Intercept)") %>%
+      select(term, estimate, p.value) %>%
+      mutate(predictor = var_name,
+             model_set = model_set_name)
+  }))
 }
 
-# Print summaries for one set (e.g., 60-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 60-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_60)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_60[[var]]))
-}
+# Extract summaries from each model set
+summary_baseline <- extract_model_summary(baseline_univariate_models, "Baseline")
+summary_30 <- extract_model_summary(univariate_models_30, "30 days")
+summary_60 <- extract_model_summary(univariate_models_60, "60 days")
+summary_90 <- extract_model_summary(univariate_models_90, "90 days")
 
-# Print summaries for one set (e.g., 90-day)
-cat("\n####################################\n")
-cat("\n=== UNIVARIATE MODELS FOR 90-DAY ===\n")
-cat("\n####################################\n")
-for (var in names(univariate_models_90)) {
-  cat("\n----------------------------\n")
-  cat("Summary for:", var, "\n")
-  cat("----------------------------\n")
-  print(summary(univariate_models_90[[var]]))
-}
+# Combine all summaries
+summary_all <- bind_rows(summary_baseline,summary_30, summary_60, summary_90)
+
+# Clean and format
+summary_all <- summary_all %>%
+  select(model_set, predictor, estimate, p.value) %>%
+  mutate(
+    estimate = round(estimate, 3),
+    p.value = signif(p.value, 3)
+  )
+
+# Create flextable
+ft <- flextable(summary_all) %>%
+  set_header_labels(
+    model_set = "Model Set",
+    predictor = "Predictor",
+    estimate = "Coefficient",
+    p.value = "p-value"
+  ) %>%
+  autofit()
+
+ft
 
 ```
 
+### (MRSA) Logistica multivariata: esposizione antibioca (30,60,90 gg) e sviluppo S.aureus resistente alla meticillina 
 ```{r MRSA_multivariate_logistic_regression}
 
 mrsa.30.fit <- glm(
@@ -3137,12 +3395,58 @@ summary(mrsa.30.fit)
 summary(mrsa.60.fit)
 summary(mrsa.90.fit)
 
-
 ```
 
+### (MRSA) Generalized Estimating Equations (GEE)
+```{r Generalized Estimating Equations (GEE)}
+library(geepack)
 
+gee.atb.mdro.30.data <- atb.mdro.30.data %>% 
+  select(MRSA, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,TMPSMX,study_id) %>%
+  na.omit()
 
+gee.atb.mdro.60.data <- atb.mdro.60.data %>% 
+  select(MRSA, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,TMPSMX,study_id) %>%
+  na.omit()
 
+gee.atb.mdro.90.data <- atb.mdro.90.data %>% 
+  select(MRSA, age, hyper.factor, renal_insuff.factor, smoke.factor,
+         lvad.era, Carbapenems, AntiMRSA,TMPSMX,study_id) %>%
+  na.omit()
+
+gee_model.30 <- geeglm(
+  MRSA ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA + TMPSMX,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.30.data,
+  corstr = "exchangeable"  
+)
+
+gee_model.60 <- geeglm(
+  MRSA ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA + TMPSMX,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.60.data,
+  corstr = "exchangeable"  
+)
+
+gee_model.90 <- geeglm(
+  MRSA ~ age + hyper.factor + renal_insuff.factor + smoke.factor +
+    lvad.era + Carbapenems + AntiMRSA + TMPSMX,
+  family = binomial,
+  id = study_id,  
+  data = gee.atb.mdro.90.data,
+  corstr = "exchangeable"  
+)
+
+summary(gee_model.30)
+summary(gee_model.60)
+summary(gee_model.90)
+```
 
 ## ANTIMICROBIAL EXPOSURE AND INFECTIONS IN COURSE OF LVAD SUPPORT AND POST- TRANSPLANT OUTCOME
 
