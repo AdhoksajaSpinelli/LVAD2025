@@ -1,0 +1,103 @@
+---
+title: "Untitled"
+toc: true
+toc-depth: 3
+editor: visual
+echo: FALSE
+warning: FALSE
+csl: "/Users/adhoksajaspinelli/Documents/R_output/Falsitta_2024/vancouver-superscript.csl"
+crossref: 
+  fig-title: Figure
+  tbl-title: Table
+  fig-prefix: Figure
+  tbl-prefix: Table
+bibliography: references.bib
+---
+
+```{r}
+#Title Idea: Long-term survival in patients with LVAD specific infection: multi-state modelling with competing outcomes of heart transplant
+  
+```
+
+# ABSTRACT
+
+#### BACKGROUND AND AIMS:
+
+Left ventricular assist devices (LVADs) are increasingly used as bridge to transplantation or destination therapy in advanced heart failure. Infections remain a major source of morbidity and mortality, and their impact on long-term outcomes is not fully defined. We aimed to determine the incidence of post-implantation infections, characterize pathogens and antibiotic use, and assess infection-related mortality at 180 days and two year.
+
+#### METHODS:
+
+We performed a single-center retrospective study of patients who underwent LVAD implantation between January 2010 and December 2024. Demographics, comorbidities, infection events, and long-term survival were collected from electronic medical records. Data collection was completed on April 30, 2025
+
+#### RESULTS:
+
+#### CONCLUSION:
+
+# INTRODUCTION
+
+Left ventricular assist devices (LVADs) have become an essential therapy for patients with advanced heart failure, providing support options such as bridge-to-transplant (BTT) and destination therapy (DT)[@Niamat2024; @Aslam2024; @Karnatak2023]. Despite significant technological advances in LVADs, infectious complications remain a major cause of morbidity and mortality, affecting patient survival, hospitalization rates, and long-term outcomes.[@Niamat2024]
+
+## AIMS OF THE STUDY
+
+#### Primary objective
+
+-   Determine the incidence of post-implantation LVAD infections.
+
+#### Secondary objectives
+
+-   Calculate the incidence of post-LVAD infections by stratifying by time to infection and type of infection
+-   Describe the pathogens responsible for the infections found and determine antibiotic consumption, expressed in terms of days of antibiotic therapy (DOT - Days of Therapy)
+-   Estimate the risk of mortality at 180 days and two year after implantation associated with the time and type of infection
+
+#### Exploratory objectives
+
+-   In the group of patients who underwent transplantation following LVAD implantation, determine the post-transplant incidence of other infectious complications (bacterial and CMV infections) and rejection.
+-   Check whether there is an association between LVAD infections caused by MDR (multidrug-resistant) germs and post-transplant mortality.
+-   Check the relationship between exposure to antibiotic therapy (days of therapy - DOT, defined daily dose - DDD, antibiotic use density - AUD) and post-transplant mortality.
+
+## METHODS
+
+We conducted a single-center retrospective study including all adult patients (≥18 years) who consecutively underwent left ventricular assist device (LVAD) implantation between January 1, 2010, and December 31, 2024, at \[...\]. Demographic and anthropometric data, comorbidities, information on infections occurring during hospitalization and subsequent follow-up, and long-term survival outcomes were collected through review of electronic medical records. Data collection was completed on April 30, 2025.
+
+## STATISICAL ANALYSIS
+
+Cause-specific cumulative incidence functions for the first infection were estimated over the entire follow-up, with death and transplantation treated as competing events. Analyses were conducted separately for LVAD-specific infections, non-LVAD-specific infections, and sepsis to assess incidence patterns for each type.
+
+Censoring occurred at the time of transplantation, loss to follow-up, study closure, or death.
+
+# RESULTS
+
+#### PATIENT DEMOGRAPHICS
+
+The cohort was predominantly male (90%), with a median age of 55 years (IQR: 49.5–61) and a mean BMI of 25.4 (IQR: 22.6–28.3). Most patients presented with INTERMACS profiles 4 (39%) or 3 (24%), and indications were primarily bridge to transplant (47%), bridge to candidacy (32%), or destination therapy (20%). Devices implanted were HeartMate 3 in 39%, HeartMate II in 30%, and HVAD in 28% of patients. The majority of LVADs (80%) were implanted between 2008 and 2019. Ischemic heart disease (56%) and dilated cardiomyopathy (39%) were the predominant heart failure etiologies. Comorbidities were common: hypertension (26%), diabetes (23%), dyslipidemia (35%), renal failure (32%), with 49% reporting a history of smoking and 60% having coronary artery disease (@tbl-table_one).
+
+#### INCIDENCE OF POST-IMPLANT INFECTIONS
+
+The cumulative incidence of infections and sepsis increased over time. LVAD-specific(@fig-LVAD-specific_Cumulative_Incidence.2) and non-LVAD-specific(@fig-NONLVAD-specific_Cumulative_Incidence) infections showed similar patterns, rising from around 28–35% at 6 months to approximately 49% by 24 months, while sepsis(@fig-Sepsis_Cumulative_Incidence) increased from about 18% at 6 months to 26% by 24 months.
+
+#### MICROBIOLOGY
+
+Infections caused by Gram-positive microorganisms were more prevalent than those due to Gram-negative organisms (@tbl-microorganism). Staphylococci were the most frequently isolated pathogens, accounting for 198 episodes (46.3%), the majority of which were attributed to Staphylococcus aureus (159 episodes, 37.1%), followed by Staphylococcus epidermidis (24 episodes, 5.6%). After staphylococci, the most commonly identified microorganisms were members of the Enterobacteriaceae family (91 episodes, 21.3%), Pseudomonas aeruginosa (60 episodes, 14.1%), and Enterococcus spp. (24 episodes, 5.6%). Among the Enterobacteriaceae, Klebsiella pneumoniae and Escherichia coli were the most frequently encountered. In addition, 8 fungal infections were recorded, including 5 (1.2%) due to Candida albicans and 3 (0.7%) due to Candida parapsilosis.
+
+#### RESISTANCE PROFILE
+
+Multidrug-resistant organisms (MDRO) accounted for 26.2% of all isolates (@tbl-mdro). The most frequently identified MDRO was methicillin-resistant Staphylococcus aureus (MRSA), with 49 episodes (48.5%), followed by extended-spectrum beta-lactamase (ESBL)–producing strains, with 20 episodes (19.8%). Other MDROs included difficult-to-treat (DTR) Pseudomonas aeruginosa and Acinetobacter baumannii (16 isolates, 15.8%), as well as KPC-producing strains (9 isolates, 8.9%).
+
+#### ANTIBIOTIC USE
+
+In our cohort, β-lactams with anti-anaerobic activity were the most frequently prescribed antibiotics (6,441 DOT, see @tbl-atb and @fig-atb), followed by trimethoprim-sulfamethoxazole (5,144 DOT) and doxycycline (3,356 DOT). Amoxicillin-clavulanate predominated among anti-anaerobic β-lactams (5,189 DOT), whereas piperacillin-tazobactam accounted for 1,252 DOT. Meropenem was the most used carbapenem (939 DOT), and oxacillin (886 DOT) was commonly administered among β-lactams without anti-anaerobic activity. Overall, β-lactams represented 10,545 DOT, of which 2,921 (27.7%) were agents active against Pseudomonas aeruginosa. The majority (7,628 DOT, 72.3%) were agents lacking anti-Pseudomonas activity. Within the anti-Pseudomonas group, piperacillin-tazobactam (1,252 DOT) and carbapenems (1,013 DOT) were most frequently used, followed by ceftazidime, cefepime, and aztreonam (656 DOT combined).
+
+#### OVERALL TRANSPLANTATION AND MORTALITY
+
+In BTT/BTC patients, mortality increased from 12% at 6 months to 26% at 24 months, while transplantation rose from 6.5% to 29% over the same period. In DT patients, cumulative mortality increased from 44% at 6 months to 48% at 24 months, indicating substantially higher short- to mid-term mortality compared with BTT/BTC patients (@fig-cuminc2).
+
+# DISCUSSION
+
+In our cohort, the cumulative incidence of LVAD-specific and non-LVAD-specific infections increased steadily, reaching nearly 50% by 24 months. These findings are consistent with prior reports describing higher infection rates early after implantation that decline with longer support.
+
+### References
+
+::: {#refs}
+:::
+
+{{< include stats.qmd >}}
