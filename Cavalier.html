@@ -82,6 +82,8 @@ div.csl-indent {
   <li><a href="#clinical-features-of-transplant-recipients" id="toc-clinical-features-of-transplant-recipients" class="nav-link" data-scroll-target="#clinical-features-of-transplant-recipients">Clinical features of transplant recipients</a></li>
   <li><a href="#lipids" id="toc-lipids" class="nav-link" data-scroll-target="#lipids">Lipids</a></li>
   <li><a href="#cardiac-allograft-vasculopathy" id="toc-cardiac-allograft-vasculopathy" class="nav-link" data-scroll-target="#cardiac-allograft-vasculopathy">Cardiac Allograft Vasculopathy</a></li>
+  <li><a href="#univariate-logistic-regression" id="toc-univariate-logistic-regression" class="nav-link" data-scroll-target="#univariate-logistic-regression">Univariate logistic regression</a></li>
+  <li><a href="#multivariate-logistic-regression" id="toc-multivariate-logistic-regression" class="nav-link" data-scroll-target="#multivariate-logistic-regression">Multivariate logistic regression</a></li>
   </ul></li>
   <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">DISCUSSION</a></li>
   <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">CONCLUSIONS</a></li>
@@ -163,23 +165,23 @@ Table&nbsp;1: Patient charachteristic at transplant
 </figcaption>
 <div aria-describedby="tbl-tableone-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="tukxuqshvy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tukxuqshvy table {
+<div id="dsutisjakq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dsutisjakq table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#tukxuqshvy thead, #tukxuqshvy tbody, #tukxuqshvy tfoot, #tukxuqshvy tr, #tukxuqshvy td, #tukxuqshvy th {
+#dsutisjakq thead, #dsutisjakq tbody, #dsutisjakq tfoot, #dsutisjakq tr, #dsutisjakq td, #dsutisjakq th {
   border-style: none;
 }
 
-#tukxuqshvy p {
+#dsutisjakq p {
   margin: 0;
   padding: 0;
 }
 
-#tukxuqshvy .gt_table {
+#dsutisjakq .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -205,12 +207,12 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-left-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_caption {
+#dsutisjakq .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#tukxuqshvy .gt_title {
+#dsutisjakq .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -222,7 +224,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-bottom-width: 0;
 }
 
-#tukxuqshvy .gt_subtitle {
+#dsutisjakq .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -234,7 +236,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-top-width: 0;
 }
 
-#tukxuqshvy .gt_heading {
+#dsutisjakq .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -246,13 +248,13 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-right-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_bottom_border {
+#dsutisjakq .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_col_headings {
+#dsutisjakq .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -267,7 +269,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-right-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_col_heading {
+#dsutisjakq .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -287,7 +289,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   overflow-x: hidden;
 }
 
-#tukxuqshvy .gt_column_spanner_outer {
+#dsutisjakq .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -299,15 +301,15 @@ Table&nbsp;1: Patient charachteristic at transplant
   padding-right: 4px;
 }
 
-#tukxuqshvy .gt_column_spanner_outer:first-child {
+#dsutisjakq .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#tukxuqshvy .gt_column_spanner_outer:last-child {
+#dsutisjakq .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#tukxuqshvy .gt_column_spanner {
+#dsutisjakq .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -319,11 +321,11 @@ Table&nbsp;1: Patient charachteristic at transplant
   width: 100%;
 }
 
-#tukxuqshvy .gt_spanner_row {
+#dsutisjakq .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#tukxuqshvy .gt_group_heading {
+#dsutisjakq .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -349,7 +351,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   text-align: left;
 }
 
-#tukxuqshvy .gt_empty_group_heading {
+#dsutisjakq .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -364,15 +366,15 @@ Table&nbsp;1: Patient charachteristic at transplant
   vertical-align: middle;
 }
 
-#tukxuqshvy .gt_from_md > :first-child {
+#dsutisjakq .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#tukxuqshvy .gt_from_md > :last-child {
+#dsutisjakq .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#tukxuqshvy .gt_row {
+#dsutisjakq .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -391,7 +393,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   overflow-x: hidden;
 }
 
-#tukxuqshvy .gt_stub {
+#dsutisjakq .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -404,7 +406,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   padding-right: 5px;
 }
 
-#tukxuqshvy .gt_stub_row_group {
+#dsutisjakq .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -418,15 +420,15 @@ Table&nbsp;1: Patient charachteristic at transplant
   vertical-align: top;
 }
 
-#tukxuqshvy .gt_row_group_first td {
+#dsutisjakq .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#tukxuqshvy .gt_row_group_first th {
+#dsutisjakq .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#tukxuqshvy .gt_summary_row {
+#dsutisjakq .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -436,16 +438,16 @@ Table&nbsp;1: Patient charachteristic at transplant
   padding-right: 5px;
 }
 
-#tukxuqshvy .gt_first_summary_row {
+#dsutisjakq .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_first_summary_row.thick {
+#dsutisjakq .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#tukxuqshvy .gt_last_summary_row {
+#dsutisjakq .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -455,7 +457,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-bottom-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_grand_summary_row {
+#dsutisjakq .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -465,7 +467,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   padding-right: 5px;
 }
 
-#tukxuqshvy .gt_first_grand_summary_row {
+#dsutisjakq .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -475,7 +477,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-top-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_last_grand_summary_row_top {
+#dsutisjakq .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -485,11 +487,11 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-bottom-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_striped {
+#dsutisjakq .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#tukxuqshvy .gt_table_body {
+#dsutisjakq .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -498,7 +500,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-bottom-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_footnotes {
+#dsutisjakq .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -512,7 +514,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-right-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_footnote {
+#dsutisjakq .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -521,7 +523,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   padding-right: 5px;
 }
 
-#tukxuqshvy .gt_sourcenotes {
+#dsutisjakq .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -535,7 +537,7 @@ Table&nbsp;1: Patient charachteristic at transplant
   border-right-color: #D3D3D3;
 }
 
-#tukxuqshvy .gt_sourcenote {
+#dsutisjakq .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -543,72 +545,72 @@ Table&nbsp;1: Patient charachteristic at transplant
   padding-right: 5px;
 }
 
-#tukxuqshvy .gt_left {
+#dsutisjakq .gt_left {
   text-align: left;
 }
 
-#tukxuqshvy .gt_center {
+#dsutisjakq .gt_center {
   text-align: center;
 }
 
-#tukxuqshvy .gt_right {
+#dsutisjakq .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#tukxuqshvy .gt_font_normal {
+#dsutisjakq .gt_font_normal {
   font-weight: normal;
 }
 
-#tukxuqshvy .gt_font_bold {
+#dsutisjakq .gt_font_bold {
   font-weight: bold;
 }
 
-#tukxuqshvy .gt_font_italic {
+#dsutisjakq .gt_font_italic {
   font-style: italic;
 }
 
-#tukxuqshvy .gt_super {
+#dsutisjakq .gt_super {
   font-size: 65%;
 }
 
-#tukxuqshvy .gt_footnote_marks {
+#dsutisjakq .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#tukxuqshvy .gt_asterisk {
+#dsutisjakq .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#tukxuqshvy .gt_indent_1 {
+#dsutisjakq .gt_indent_1 {
   text-indent: 5px;
 }
 
-#tukxuqshvy .gt_indent_2 {
+#dsutisjakq .gt_indent_2 {
   text-indent: 10px;
 }
 
-#tukxuqshvy .gt_indent_3 {
+#dsutisjakq .gt_indent_3 {
   text-indent: 15px;
 }
 
-#tukxuqshvy .gt_indent_4 {
+#dsutisjakq .gt_indent_4 {
   text-indent: 20px;
 }
 
-#tukxuqshvy .gt_indent_5 {
+#dsutisjakq .gt_indent_5 {
   text-indent: 25px;
 }
 
-#tukxuqshvy .katex-display {
+#dsutisjakq .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#tukxuqshvy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dsutisjakq div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -632,9 +634,9 @@ Table&nbsp;1: Patient charachteristic at transplant
 <tr class="odd gt_col_headings">
 <th id="stat_0" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Overall</strong><br>
 N = 133<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
-<th id="stat_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>0</strong><br>
+<th id="stat_1" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>No</strong><br>
 N = 92<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
-<th id="stat_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>1</strong><br>
+<th id="stat_2" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Yes</strong><br>
 N = 41<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
 </tr>
 </thead>
@@ -1076,7 +1078,7 @@ Table&nbsp;2: Lipid profile variation in time
 </figcaption>
 <div aria-describedby="tbl-lipidprofile-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div class="tabwid"><style>.cl-e1c25628{}.cl-e1b7a3a4{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e1b7a3e0{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e1bc1ec0{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e1bc1eca{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e1bc4df0{width:1.015in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4dfa{width:1.346in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e04{width:1.839in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e05{width:2.399in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e0e{width:1.665in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e0f{width:1.015in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e18{width:1.346in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e19{width:1.839in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e1a{width:2.399in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e22{width:1.665in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e2c{width:1.015in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e2d{width:1.346in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e2e{width:1.839in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e2f{width:2.399in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e36{width:1.665in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e37{width:1.015in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e40{width:1.346in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e41{width:1.839in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e42{width:2.399in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e1bc4e4a{width:1.665in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-e1c25628"><thead><tr style="overflow-wrap:break-word;"><th class="cl-e1bc4df0"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3a4">Timepoint</span></p></th><th class="cl-e1bc4dfa"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3a4">LDL-C (mg/dL)</span></p></th><th class="cl-e1bc4e04"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3a4">Triglycerides (mg/dL)</span></p></th><th class="cl-e1bc4e05"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3a4">Remnant cholesterol (mg/dL)</span></p></th><th class="cl-e1bc4e0e"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3a4">LDL &lt;70 mg/dL (%)</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e1bc4e0f"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">Baseline</span></p></td><td class="cl-e1bc4e18"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">86 (68-104)</span></p></td><td class="cl-e1bc4e19"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">92 (76-127)</span></p></td><td class="cl-e1bc4e1a"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">18 (15-25)</span></p></td><td class="cl-e1bc4e22"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">26</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e1bc4e0f"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">6 months</span></p></td><td class="cl-e1bc4e18"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">118 (95-146)</span></p></td><td class="cl-e1bc4e19"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">150 (116-224)</span></p></td><td class="cl-e1bc4e1a"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">29.5 (23-44)</span></p></td><td class="cl-e1bc4e22"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">6</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e1bc4e0f"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">1 year</span></p></td><td class="cl-e1bc4e18"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">98.5 (85-124)</span></p></td><td class="cl-e1bc4e19"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">129.5 (101-174)</span></p></td><td class="cl-e1bc4e1a"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">26 (20-35)</span></p></td><td class="cl-e1bc4e22"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">7</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e1bc4e2c"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">5 years</span></p></td><td class="cl-e1bc4e2d"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">91.5 (76-111)</span></p></td><td class="cl-e1bc4e2e"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">115 (91-162)</span></p></td><td class="cl-e1bc4e2f"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">21 (16-32)</span></p></td><td class="cl-e1bc4e36"><p class="cl-e1bc1ec0"><span class="cl-e1b7a3e0">15</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="5" class="cl-e1bc4e37"><p class="cl-e1bc1eca"><span class="cl-e1b7a3e0">Data are presented as median (IQR).</span></p></td></tr></tfoot></table></div>
+<div class="tabwid"><style>.cl-6e402502{}.cl-6e34f0d8{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6e34f10a{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-6e399a70{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-6e399a7a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-6e39c7e8{width:1.015in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c7f2{width:1.346in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c7fc{width:1.839in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c7fd{width:2.399in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c806{width:1.665in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c810{width:1.015in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c811{width:1.346in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c81a{width:1.839in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c81b{width:2.399in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c81c{width:1.665in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c824{width:1.015in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c825{width:1.346in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c826{width:1.839in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c82e{width:2.399in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c82f{width:1.665in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c838{width:1.015in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c839{width:1.346in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c83a{width:1.839in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c83b{width:2.399in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-6e39c842{width:1.665in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-6e402502"><thead><tr style="overflow-wrap:break-word;"><th class="cl-6e39c7e8"><p class="cl-6e399a70"><span class="cl-6e34f0d8">Timepoint</span></p></th><th class="cl-6e39c7f2"><p class="cl-6e399a70"><span class="cl-6e34f0d8">LDL-C (mg/dL)</span></p></th><th class="cl-6e39c7fc"><p class="cl-6e399a70"><span class="cl-6e34f0d8">Triglycerides (mg/dL)</span></p></th><th class="cl-6e39c7fd"><p class="cl-6e399a70"><span class="cl-6e34f0d8">Remnant cholesterol (mg/dL)</span></p></th><th class="cl-6e39c806"><p class="cl-6e399a70"><span class="cl-6e34f0d8">LDL &lt;70 mg/dL (%)</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-6e39c810"><p class="cl-6e399a70"><span class="cl-6e34f10a">Baseline</span></p></td><td class="cl-6e39c811"><p class="cl-6e399a70"><span class="cl-6e34f10a">86 (68-104)</span></p></td><td class="cl-6e39c81a"><p class="cl-6e399a70"><span class="cl-6e34f10a">92 (76-127)</span></p></td><td class="cl-6e39c81b"><p class="cl-6e399a70"><span class="cl-6e34f10a">18 (15-25)</span></p></td><td class="cl-6e39c81c"><p class="cl-6e399a70"><span class="cl-6e34f10a">26</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6e39c810"><p class="cl-6e399a70"><span class="cl-6e34f10a">6 months</span></p></td><td class="cl-6e39c811"><p class="cl-6e399a70"><span class="cl-6e34f10a">118 (95-146)</span></p></td><td class="cl-6e39c81a"><p class="cl-6e399a70"><span class="cl-6e34f10a">150 (116-224)</span></p></td><td class="cl-6e39c81b"><p class="cl-6e399a70"><span class="cl-6e34f10a">29.5 (23-44)</span></p></td><td class="cl-6e39c81c"><p class="cl-6e399a70"><span class="cl-6e34f10a">6</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6e39c810"><p class="cl-6e399a70"><span class="cl-6e34f10a">1 year</span></p></td><td class="cl-6e39c811"><p class="cl-6e399a70"><span class="cl-6e34f10a">98.5 (85-124)</span></p></td><td class="cl-6e39c81a"><p class="cl-6e399a70"><span class="cl-6e34f10a">129.5 (101-174)</span></p></td><td class="cl-6e39c81b"><p class="cl-6e399a70"><span class="cl-6e34f10a">26 (20-35)</span></p></td><td class="cl-6e39c81c"><p class="cl-6e399a70"><span class="cl-6e34f10a">7</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-6e39c824"><p class="cl-6e399a70"><span class="cl-6e34f10a">5 years</span></p></td><td class="cl-6e39c825"><p class="cl-6e399a70"><span class="cl-6e34f10a">91.5 (76-111)</span></p></td><td class="cl-6e39c826"><p class="cl-6e399a70"><span class="cl-6e34f10a">115 (91-162)</span></p></td><td class="cl-6e39c82e"><p class="cl-6e399a70"><span class="cl-6e34f10a">21 (16-32)</span></p></td><td class="cl-6e39c82f"><p class="cl-6e399a70"><span class="cl-6e34f10a">15</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="5" class="cl-6e39c838"><p class="cl-6e399a7a"><span class="cl-6e34f10a">Data are presented as median (IQR).</span></p></td></tr></tfoot></table></div>
 </div>
 </div>
 </figure>
@@ -1108,23 +1110,23 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
 </figcaption>
 <div aria-describedby="tbl-cav-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
-<div id="krzfwqfpqe" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#krzfwqfpqe table {
+<div id="bfuznnfuqi" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bfuznnfuqi table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#krzfwqfpqe thead, #krzfwqfpqe tbody, #krzfwqfpqe tfoot, #krzfwqfpqe tr, #krzfwqfpqe td, #krzfwqfpqe th {
+#bfuznnfuqi thead, #bfuznnfuqi tbody, #bfuznnfuqi tfoot, #bfuznnfuqi tr, #bfuznnfuqi td, #bfuznnfuqi th {
   border-style: none;
 }
 
-#krzfwqfpqe p {
+#bfuznnfuqi p {
   margin: 0;
   padding: 0;
 }
 
-#krzfwqfpqe .gt_table {
+#bfuznnfuqi .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1150,12 +1152,12 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-left-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_caption {
+#bfuznnfuqi .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#krzfwqfpqe .gt_title {
+#bfuznnfuqi .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1167,7 +1169,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-bottom-width: 0;
 }
 
-#krzfwqfpqe .gt_subtitle {
+#bfuznnfuqi .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1179,7 +1181,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-top-width: 0;
 }
 
-#krzfwqfpqe .gt_heading {
+#bfuznnfuqi .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1191,13 +1193,13 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-right-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_bottom_border {
+#bfuznnfuqi .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_col_headings {
+#bfuznnfuqi .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1212,7 +1214,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-right-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_col_heading {
+#bfuznnfuqi .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1232,7 +1234,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   overflow-x: hidden;
 }
 
-#krzfwqfpqe .gt_column_spanner_outer {
+#bfuznnfuqi .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1244,15 +1246,15 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   padding-right: 4px;
 }
 
-#krzfwqfpqe .gt_column_spanner_outer:first-child {
+#bfuznnfuqi .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#krzfwqfpqe .gt_column_spanner_outer:last-child {
+#bfuznnfuqi .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#krzfwqfpqe .gt_column_spanner {
+#bfuznnfuqi .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1264,11 +1266,11 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   width: 100%;
 }
 
-#krzfwqfpqe .gt_spanner_row {
+#bfuznnfuqi .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#krzfwqfpqe .gt_group_heading {
+#bfuznnfuqi .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1294,7 +1296,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   text-align: left;
 }
 
-#krzfwqfpqe .gt_empty_group_heading {
+#bfuznnfuqi .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1309,15 +1311,15 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   vertical-align: middle;
 }
 
-#krzfwqfpqe .gt_from_md > :first-child {
+#bfuznnfuqi .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#krzfwqfpqe .gt_from_md > :last-child {
+#bfuznnfuqi .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#krzfwqfpqe .gt_row {
+#bfuznnfuqi .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1336,7 +1338,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   overflow-x: hidden;
 }
 
-#krzfwqfpqe .gt_stub {
+#bfuznnfuqi .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1349,7 +1351,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   padding-right: 5px;
 }
 
-#krzfwqfpqe .gt_stub_row_group {
+#bfuznnfuqi .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1363,15 +1365,15 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   vertical-align: top;
 }
 
-#krzfwqfpqe .gt_row_group_first td {
+#bfuznnfuqi .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#krzfwqfpqe .gt_row_group_first th {
+#bfuznnfuqi .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#krzfwqfpqe .gt_summary_row {
+#bfuznnfuqi .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1381,16 +1383,16 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   padding-right: 5px;
 }
 
-#krzfwqfpqe .gt_first_summary_row {
+#bfuznnfuqi .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_first_summary_row.thick {
+#bfuznnfuqi .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#krzfwqfpqe .gt_last_summary_row {
+#bfuznnfuqi .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1400,7 +1402,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-bottom-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_grand_summary_row {
+#bfuznnfuqi .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1410,7 +1412,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   padding-right: 5px;
 }
 
-#krzfwqfpqe .gt_first_grand_summary_row {
+#bfuznnfuqi .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1420,7 +1422,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-top-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_last_grand_summary_row_top {
+#bfuznnfuqi .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1430,11 +1432,11 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-bottom-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_striped {
+#bfuznnfuqi .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#krzfwqfpqe .gt_table_body {
+#bfuznnfuqi .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1443,7 +1445,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-bottom-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_footnotes {
+#bfuznnfuqi .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1457,7 +1459,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-right-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_footnote {
+#bfuznnfuqi .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1466,7 +1468,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   padding-right: 5px;
 }
 
-#krzfwqfpqe .gt_sourcenotes {
+#bfuznnfuqi .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1480,7 +1482,7 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   border-right-color: #D3D3D3;
 }
 
-#krzfwqfpqe .gt_sourcenote {
+#bfuznnfuqi .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1488,72 +1490,72 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
   padding-right: 5px;
 }
 
-#krzfwqfpqe .gt_left {
+#bfuznnfuqi .gt_left {
   text-align: left;
 }
 
-#krzfwqfpqe .gt_center {
+#bfuznnfuqi .gt_center {
   text-align: center;
 }
 
-#krzfwqfpqe .gt_right {
+#bfuznnfuqi .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#krzfwqfpqe .gt_font_normal {
+#bfuznnfuqi .gt_font_normal {
   font-weight: normal;
 }
 
-#krzfwqfpqe .gt_font_bold {
+#bfuznnfuqi .gt_font_bold {
   font-weight: bold;
 }
 
-#krzfwqfpqe .gt_font_italic {
+#bfuznnfuqi .gt_font_italic {
   font-style: italic;
 }
 
-#krzfwqfpqe .gt_super {
+#bfuznnfuqi .gt_super {
   font-size: 65%;
 }
 
-#krzfwqfpqe .gt_footnote_marks {
+#bfuznnfuqi .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#krzfwqfpqe .gt_asterisk {
+#bfuznnfuqi .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#krzfwqfpqe .gt_indent_1 {
+#bfuznnfuqi .gt_indent_1 {
   text-indent: 5px;
 }
 
-#krzfwqfpqe .gt_indent_2 {
+#bfuznnfuqi .gt_indent_2 {
   text-indent: 10px;
 }
 
-#krzfwqfpqe .gt_indent_3 {
+#bfuznnfuqi .gt_indent_3 {
   text-indent: 15px;
 }
 
-#krzfwqfpqe .gt_indent_4 {
+#bfuznnfuqi .gt_indent_4 {
   text-indent: 20px;
 }
 
-#krzfwqfpqe .gt_indent_5 {
+#bfuznnfuqi .gt_indent_5 {
   text-indent: 25px;
 }
 
-#krzfwqfpqe .katex-display {
+#bfuznnfuqi .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#krzfwqfpqe div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#bfuznnfuqi div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1604,6 +1606,1214 @@ Table&nbsp;3: CAV prevalence at 1 and 5 years
 <td class="gt_row gt_center" headers="n_pct_5yr">13 (9.8%)</td>
 </tr>
 </tbody>
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="univariate-logistic-regression" class="level3">
+<h3 class="anchored" data-anchor-id="univariate-logistic-regression">Univariate logistic regression</h3>
+<p>In univariable logistic regression analyses, several recipient and donor characteristics were significantly associated with the development of any type of CAV at 5 year post transplant (<a href="#tbl-univar" class="quarto-xref">Table&nbsp;4</a>). Older recipient age was associated with higher odds of CAV (OR 1.04 per year, 95% CI 1.01–1.07, p = 0.022), while female sex was protective compared with males (OR 0.38, 95% CI 0.16–0.85, p = 0.023). Higher donor age also increased the risk of CAV (OR 1.05 per year, 95% CI 1.02–1.09, p = 0.001). Among lifestyle factors, a history of smoking was strongly associated with higher odds of developing CAV (OR 3.69, 95% CI 1.63–8.53, p = 0.002). LDL levels at 1 year showed a trend toward higher odds of CAV (OR 1.01 per mg/dL, 95% CI 1.00–1.03, p = 0.085), although this did not reach statistical significance.</p>
+<div class="cell">
+<div id="tbl-univar" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-univar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Univariable logistic regression
+</figcaption>
+<div aria-describedby="tbl-univar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="tiaocqghpk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tiaocqghpk table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tiaocqghpk thead, #tiaocqghpk tbody, #tiaocqghpk tfoot, #tiaocqghpk tr, #tiaocqghpk td, #tiaocqghpk th {
+  border-style: none;
+}
+
+#tiaocqghpk p {
+  margin: 0;
+  padding: 0;
+}
+
+#tiaocqghpk .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tiaocqghpk .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tiaocqghpk .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tiaocqghpk .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tiaocqghpk .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tiaocqghpk .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tiaocqghpk .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tiaocqghpk .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tiaocqghpk .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tiaocqghpk .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tiaocqghpk .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tiaocqghpk .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tiaocqghpk .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tiaocqghpk .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tiaocqghpk .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tiaocqghpk .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tiaocqghpk .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tiaocqghpk .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tiaocqghpk .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tiaocqghpk .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tiaocqghpk .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tiaocqghpk .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tiaocqghpk .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tiaocqghpk .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tiaocqghpk .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tiaocqghpk .gt_left {
+  text-align: left;
+}
+
+#tiaocqghpk .gt_center {
+  text-align: center;
+}
+
+#tiaocqghpk .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tiaocqghpk .gt_font_normal {
+  font-weight: normal;
+}
+
+#tiaocqghpk .gt_font_bold {
+  font-weight: bold;
+}
+
+#tiaocqghpk .gt_font_italic {
+  font-style: italic;
+}
+
+#tiaocqghpk .gt_super {
+  font-size: 65%;
+}
+
+#tiaocqghpk .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tiaocqghpk .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tiaocqghpk .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tiaocqghpk .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tiaocqghpk .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tiaocqghpk .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tiaocqghpk .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tiaocqghpk .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tiaocqghpk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header gt_col_headings">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="stat_n" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>N</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>OR</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Age at transplant</td>
+<td class="gt_row gt_center" headers="stat_n">133</td>
+<td class="gt_row gt_center" headers="estimate">1.04</td>
+<td class="gt_row gt_center" headers="conf.low">1.01, 1.07</td>
+<td class="gt_row gt_center" headers="p.value">0.022</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Sex (F)</td>
+<td class="gt_row gt_center" headers="stat_n">133</td>
+<td class="gt_row gt_center" headers="estimate">0.38</td>
+<td class="gt_row gt_center" headers="conf.low">0.16, 0.85</td>
+<td class="gt_row gt_center" headers="p.value">0.023</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Arterial Hypertension</td>
+<td class="gt_row gt_center" headers="stat_n">123</td>
+<td class="gt_row gt_center" headers="estimate">1.58</td>
+<td class="gt_row gt_center" headers="conf.low">0.68, 3.63</td>
+<td class="gt_row gt_center" headers="p.value">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Diabetes Mellitus</td>
+<td class="gt_row gt_center" headers="stat_n">124</td>
+<td class="gt_row gt_center" headers="estimate">1.28</td>
+<td class="gt_row gt_center" headers="conf.low">0.41, 3.67</td>
+<td class="gt_row gt_center" headers="p.value">0.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">History of smoking</td>
+<td class="gt_row gt_center" headers="stat_n">122</td>
+<td class="gt_row gt_center" headers="estimate">3.69</td>
+<td class="gt_row gt_center" headers="conf.low">1.63, 8.53</td>
+<td class="gt_row gt_center" headers="p.value">0.002</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Listing to HTx</td>
+<td class="gt_row gt_center" headers="stat_n">133</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">0.98, 1.01</td>
+<td class="gt_row gt_center" headers="p.value">0.8</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">MCS duration</td>
+<td class="gt_row gt_center" headers="stat_n">58</td>
+<td class="gt_row gt_center" headers="estimate">0.98</td>
+<td class="gt_row gt_center" headers="conf.low">0.94, 1.02</td>
+<td class="gt_row gt_center" headers="p.value">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">LDL (Baseline)</td>
+<td class="gt_row gt_center" headers="stat_n">117</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">0.99, 1.01</td>
+<td class="gt_row gt_center" headers="p.value">0.7</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">LDL (6 months)</td>
+<td class="gt_row gt_center" headers="stat_n">122</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">0.99, 1.01</td>
+<td class="gt_row gt_center" headers="p.value">&gt;0.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">LDL (1 year)</td>
+<td class="gt_row gt_center" headers="stat_n">118</td>
+<td class="gt_row gt_center" headers="estimate">1.01</td>
+<td class="gt_row gt_center" headers="conf.low">1.00, 1.03</td>
+<td class="gt_row gt_center" headers="p.value">0.085</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">LDL (5 years)</td>
+<td class="gt_row gt_center" headers="stat_n">72</td>
+<td class="gt_row gt_center" headers="estimate">1.01</td>
+<td class="gt_row gt_center" headers="conf.low">0.99, 1.03</td>
+<td class="gt_row gt_center" headers="p.value">0.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">TGL (Baseline)</td>
+<td class="gt_row gt_center" headers="stat_n">118</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">0.99, 1.00</td>
+<td class="gt_row gt_center" headers="p.value">0.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">TGL (6 months)</td>
+<td class="gt_row gt_center" headers="stat_n">124</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">1.00, 1.01</td>
+<td class="gt_row gt_center" headers="p.value">0.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">TGL (1 year)</td>
+<td class="gt_row gt_center" headers="stat_n">120</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">1.0, 1.00</td>
+<td class="gt_row gt_center" headers="p.value">&gt;0.9</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">TGL (5 years)</td>
+<td class="gt_row gt_center" headers="stat_n">73</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">0.99, 1.00</td>
+<td class="gt_row gt_center" headers="p.value">0.3</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Remnant (Baseline)</td>
+<td class="gt_row gt_center" headers="stat_n">117</td>
+<td class="gt_row gt_center" headers="estimate">0.97</td>
+<td class="gt_row gt_center" headers="conf.low">0.93, 1.01</td>
+<td class="gt_row gt_center" headers="p.value">0.2</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Remnant (6 months)</td>
+<td class="gt_row gt_center" headers="stat_n">122</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">0.97, 1.03</td>
+<td class="gt_row gt_center" headers="p.value">&gt;0.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Remnant (1 year)</td>
+<td class="gt_row gt_center" headers="stat_n">118</td>
+<td class="gt_row gt_center" headers="estimate">1.01</td>
+<td class="gt_row gt_center" headers="conf.low">0.99, 1.03</td>
+<td class="gt_row gt_center" headers="p.value">0.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Remnant (5 years)</td>
+<td class="gt_row gt_center" headers="stat_n">72</td>
+<td class="gt_row gt_center" headers="estimate">0.99</td>
+<td class="gt_row gt_center" headers="conf.low">0.95, 1.03</td>
+<td class="gt_row gt_center" headers="p.value">0.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Donor Age</td>
+<td class="gt_row gt_center" headers="stat_n">130</td>
+<td class="gt_row gt_center" headers="estimate">1.05</td>
+<td class="gt_row gt_center" headers="conf.low">1.02, 1.09</td>
+<td class="gt_row gt_center" headers="p.value">0.001</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Ischemic time</td>
+<td class="gt_row gt_center" headers="stat_n">127</td>
+<td class="gt_row gt_center" headers="estimate">1.00</td>
+<td class="gt_row gt_center" headers="conf.low">0.99, 1.00</td>
+<td class="gt_row gt_center" headers="p.value">0.6</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Donor death</td>
+<td class="gt_row gt_center" headers="stat_n">112</td>
+<td class="gt_row gt_center" headers="estimate"><br>
+</td>
+<td class="gt_row gt_center" headers="conf.low"><br>
+</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Head Trauma</td>
+<td class="gt_row gt_center" headers="stat_n"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">—</td>
+<td class="gt_row gt_center" headers="conf.low">—</td>
+<td class="gt_row gt_center" headers="p.value"><br>
+</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Stroke</td>
+<td class="gt_row gt_center" headers="stat_n"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">0.68</td>
+<td class="gt_row gt_center" headers="conf.low">0.25, 1.94</td>
+<td class="gt_row gt_center" headers="p.value">0.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Anoxia</td>
+<td class="gt_row gt_center" headers="stat_n"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">0.57</td>
+<td class="gt_row gt_center" headers="conf.low">0.10, 2.71</td>
+<td class="gt_row gt_center" headers="p.value">0.5</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
+<td class="gt_row gt_center" headers="stat_n"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">0.33</td>
+<td class="gt_row gt_center" headers="conf.low">0.02, 2.76</td>
+<td class="gt_row gt_center" headers="p.value">0.4</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;Polytrauma</td>
+<td class="gt_row gt_center" headers="stat_n"><br>
+</td>
+<td class="gt_row gt_center" headers="estimate">0.33</td>
+<td class="gt_row gt_center" headers="conf.low">0.08, 1.29</td>
+<td class="gt_row gt_center" headers="p.value">0.12</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="even">
+<td colspan="5" class="gt_sourcenote">Abbreviations: CI = Confidence Interval, OR = Odds Ratio</td>
+</tr>
+</tfoot>
+
+</table>
+
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="multivariate-logistic-regression" class="level3">
+<h3 class="anchored" data-anchor-id="multivariate-logistic-regression">Multivariate logistic regression</h3>
+<p>In multivariable logistic regression(<a href="#tbl-multivar" class="quarto-xref">Table&nbsp;5</a>), donor age was the only significant independent predictor of any type of cardiac allograft vasculopathy (CAV) at 5 year post-transplant (OR 1.05 per year, 95% CI 1.02–1.10, p = 0.006). Recipient age, sex, LDL at 1 year, and history of smoking were not statistically significant, although smoking showed a trend toward higher risk (OR 2.50, 95% CI 0.95–6.70, p = 0.064). These variables were selected based on clinical relevance and univariable associations, with LDL included to explore the potential impact of post-transplant lipid levels. Overall, the analysis highlights donor age as the strongest independent predictor of CAV in this cohort.</p>
+<div class="cell">
+<div id="tbl-multivar" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-multivar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;5: Multivariable logistic regression
+</figcaption>
+<div aria-describedby="tbl-multivar-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<div id="ppmxxkvaqs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ppmxxkvaqs table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ppmxxkvaqs thead, #ppmxxkvaqs tbody, #ppmxxkvaqs tfoot, #ppmxxkvaqs tr, #ppmxxkvaqs td, #ppmxxkvaqs th {
+  border-style: none;
+}
+
+#ppmxxkvaqs p {
+  margin: 0;
+  padding: 0;
+}
+
+#ppmxxkvaqs .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ppmxxkvaqs .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ppmxxkvaqs .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ppmxxkvaqs .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ppmxxkvaqs .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ppmxxkvaqs .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ppmxxkvaqs .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ppmxxkvaqs .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ppmxxkvaqs .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ppmxxkvaqs .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ppmxxkvaqs .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ppmxxkvaqs .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ppmxxkvaqs .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ppmxxkvaqs .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ppmxxkvaqs .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppmxxkvaqs .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ppmxxkvaqs .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ppmxxkvaqs .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ppmxxkvaqs .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppmxxkvaqs .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ppmxxkvaqs .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppmxxkvaqs .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ppmxxkvaqs .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppmxxkvaqs .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ppmxxkvaqs .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ppmxxkvaqs .gt_left {
+  text-align: left;
+}
+
+#ppmxxkvaqs .gt_center {
+  text-align: center;
+}
+
+#ppmxxkvaqs .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ppmxxkvaqs .gt_font_normal {
+  font-weight: normal;
+}
+
+#ppmxxkvaqs .gt_font_bold {
+  font-weight: bold;
+}
+
+#ppmxxkvaqs .gt_font_italic {
+  font-style: italic;
+}
+
+#ppmxxkvaqs .gt_super {
+  font-size: 65%;
+}
+
+#ppmxxkvaqs .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ppmxxkvaqs .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ppmxxkvaqs .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ppmxxkvaqs .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ppmxxkvaqs .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ppmxxkvaqs .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ppmxxkvaqs .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ppmxxkvaqs .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ppmxxkvaqs div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table do-not-create-environment cell caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="header gt_col_headings">
+<th id="label" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
+<th id="estimate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>OR</strong></th>
+<th id="conf.low" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong></th>
+<th id="p.value" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>p-value</strong></th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">LDL (1 year)</td>
+<td class="gt_row gt_center" headers="estimate">1.01</td>
+<td class="gt_row gt_center" headers="conf.low">0.99, 1.02</td>
+<td class="gt_row gt_center" headers="p.value">0.4</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Age at transplant</td>
+<td class="gt_row gt_center" headers="estimate">1.02</td>
+<td class="gt_row gt_center" headers="conf.low">0.98, 1.07</td>
+<td class="gt_row gt_center" headers="p.value">0.3</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">Sex</td>
+<td class="gt_row gt_center" headers="estimate">0.53</td>
+<td class="gt_row gt_center" headers="conf.low">0.20, 1.38</td>
+<td class="gt_row gt_center" headers="p.value">0.2</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="label">Donor Age</td>
+<td class="gt_row gt_center" headers="estimate">1.05</td>
+<td class="gt_row gt_center" headers="conf.low">1.02, 1.10</td>
+<td class="gt_row gt_center" headers="p.value">0.006</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="label">History of smoking</td>
+<td class="gt_row gt_center" headers="estimate">2.50</td>
+<td class="gt_row gt_center" headers="conf.low">0.95, 6.70</td>
+<td class="gt_row gt_center" headers="p.value">0.064</td>
+</tr>
+</tbody><tfoot class="gt_sourcenotes">
+<tr class="even">
+<td colspan="4" class="gt_sourcenote">Abbreviations: CI = Confidence Interval, OR = Odds Ratio</td>
+</tr>
+</tfoot>
+
 </table>
 
 </div>
