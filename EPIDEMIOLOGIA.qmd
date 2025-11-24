@@ -1,0 +1,2853 @@
+---
+title: "EPIDEMIOLOGIA E IMPATTO CLINICO DELLE INFEZIONI NEI PAZIENTI PORTATORI DI LVAD: ANALISI RETROSPETTIVA DI COORTE"
+format: html
+toc: true
+toc-depth: 4
+editor: visual
+echo: FALSE
+warning: FALSE
+csl: "/Users/adhoksajaspinelli/Documents/R_output/Falsitta_2024/vancouver-superscript.csl"
+crossref: 
+  fig-title: Figure
+  tbl-title: Table
+  fig-prefix: Figure
+  tbl-prefix: Table
+bibliography: references.bib
+---
+
+# ABSTRACT
+
+### INTRODUZIONE
+
+Le infezioni rappresentano una complicanza frequente nei pazienti sottoposti a impianto di dispositivi di assistenza ventricolare sinistra (LVAD), con potenziale impatto sulla morbilità, sulla qualità della vita e sull’accesso al trapianto cardiaco.
+
+### METODOLOGIA
+
+Abbiamo analizzato retrospettivamente i dati di 139 pazienti consecutivamente sottoposti a impianto LVAD presso il nostro centro tra il gennaio 2010 e il luglio 2024. Sono stati raccolti e classificati tutti gli episodi infettivi documentati fino a ottobre 2024, con attenzione alla tipologia, sede, eziologia e gravità clinica (batteriemia, sepsi).
+
+### RISULTATI
+
+In totale sono stati registrati 433 episodi infettivi. Il 46% era correlato direttamente al dispositivo. Le batteriemie secondarie rappresentavano il 24% e le polmoniti il 12,5%. Il 35% dei pazienti ha sviluppato almeno un episodio di batteriemia entro 12 mesi dall’impianto, mentre il 22% ha presentato sepsi. I principali patogeni isolati includevano Staphylococcus aureus (37%), Pseudomonas aeruginosa (14%) e Klebsiella pneumoniae (8%). Microrganismi multiresistenti (MDRO) sono stati responsabili del 20% delle infezioni, con MRSA (47%) ed ESBL (23%) come ceppi predominanti. A 12 mesi dall’impianto, solo il 30% dei pazienti risultava libero da infezioni; a 24 e 36 mesi il dato scendeva rispettivamente al 16% e all’11%.
+
+### CONCLUSIONI
+
+Le infezioni nei pazienti portatori di LVAD sono frequenti, spesso gravi e si manifestano precocemente dopo l’impianto. La prevenzione, la diagnosi tempestiva e l’adozione di strategie antibiotiche mirate rappresentano elementi cruciali per ridurre l’impatto clinico e garantire l’accesso sicuro al trapianto cardiaco.
+
+```{r Libraries}
+
+library(broom)
+library(cmprsk)
+library(finalfit)
+library(forcats)
+library(flextable)
+library(ggpubr)
+library(ggsurvfit)
+library(glue)
+library(gt)
+library(gtsummary)
+library(Hmisc)
+library(latticeExtra)
+library(lubridate)
+library(parameters)
+library(patchwork)
+library(RColorBrewer)
+library(survival)
+library(survminer)
+library(tableone)
+library(tidycmprsk)
+library(tidyverse)
+
+```
+
+```{r Data_loading, echo=FALSE,message=FALSE}
+
+#Clear existing data and graphics
+rm(list=ls())
+graphics.off()
+#Read Data
+#data=read.csv('LVAD20102024.csv')
+data=read.csv("~/Documents/R_output/LVAD20102024/LVAD20102024.csv")
+#Setting Labels
+
+label(data$study_id)="Study ID"
+label(data$redcap_repeat_instrument)="Repeat Instrument"
+label(data$redcap_repeat_instance)="Repeat Instance"
+label(data$name)="Surname Name"
+label(data$dob)="Date of birth"
+label(data$age)="Age at LVAD implantation"
+label(data$sex)="Sex"
+label(data$intermacs)="INTERMACS class"
+label(data$lvad_date)="LVAD Implant Date"
+label(data$lvad_redo_date)="2nd LVAD Implant Date (LVAD redo)"
+label(data$lvad_mod)="Model"
+label(data$lvad_ind)="LVAD indication"
+label(data$cmp_aethiology)="Cardiomyopathy aethiology"
+label(data$comments)="Comments"
+label(data$demographics_complete)="Complete?"
+label(data$hyper)="Hypertension"
+label(data$dyslip)="Dyslipidemia"
+label(data$diabetes)="Diabetes (type 1 or type 2)"
+label(data$renal_insuff)="Renal insufficiency"
+label(data$renal_stadiation)="IRC "
+label(data$smoke)="History of smoking"
+label(data$drugs)="History of drug or alcohol abuse"
+label(data$coronary_dis)="Coronary artery disease"
+label(data$coronary_int___1)="Coronary artery interventions (choice=Percutaneous Coronary Intervention (PCI) or Percutaneous transluminal coronary angioplasty (PTCA))"
+label(data$coronary_int___2)="Coronary artery interventions (choice=Coronary Artery Bypass Graft Surgery (CABG))"
+label(data$coronary_int___3)="Coronary artery interventions (choice=Other)"
+label(data$infarction)="Myocadial infarction"
+label(data$arrhyt)="Arrhytmia"
+label(data$arrhyt_type___1)="Arrhytmia Type (choice=Atrial Fibrillation)"
+label(data$arrhyt_type___2)="Arrhytmia Type (choice=Atrial Flutter)"
+label(data$arrhyt_type___3)="Arrhytmia Type (choice=Ventricular Fibrillation)"
+label(data$arrhyt_type___4)="Arrhytmia Type (choice=Ventricular Tachycardia)"
+label(data$valve_rep)="Valve repair/replace"
+label(data$pm)="Pacemeaker/defribillator"
+label(data$cardhistorynotes)="Notes"
+label(data$resp_dis)="Respiratory disorder"
+label(data$resp_dis_type___1)="Respiratory condition (choice=Ashtma)"
+label(data$resp_dis_type___2)="Respiratory condition (choice=COPD)"
+label(data$resp_dis_type___3)="Respiratory condition (choice=Bronchiectasis)"
+label(data$resp_dis_type___5)="Respiratory condition (choice=Obstructive Sleep Apnea Syndrome (OSAS))"
+label(data$resp_dis_type___4)="Respiratory condition (choice=Other respiratory conditions)"
+label(data$neuro_hist)="Neurologic disorders"
+label(data$neuro_type___1)="Neurology condition (choice=Transitory Ischaemic Attack (TIA))"
+label(data$neuro_type___2)="Neurology condition (choice=Ischaemic Stroke)"
+label(data$neuro_type___3)="Neurology condition (choice=Haemorragic Stroke)"
+label(data$neuro_type___4)="Neurology condition (choice=Seizure)"
+label(data$neuro_type___5)="Neurology condition (choice=Other)"
+label(data$neoplasia)="Neoplasia/cancer"
+label(data$surgery)="Any major previous surgery?"
+label(data$surgery_type)="Specify"
+label(data$sternotomy)="Previous sternotomy?"
+label(data$sternotomy_n)="Number of sternotomy"
+label(data$medical_history_complete)="Complete?"
+label(data$emoglobina)="Haemoglobin"
+label(data$ematocrito)="Haematocrit"
+label(data$linfociti)="Lymphocytes"
+label(data$platelet)="Platelet count"
+label(data$potassio)="Potassium"
+label(data$creatinina)="Creatinine "
+label(data$urea)="Urea "
+label(data$bnp)="serum BNP"
+label(data$ntprobnp)="N-terminal pro b-type natriuretic peptide (NT-proBNP)"
+label(data$albu)="Albumin "
+label(data$colesterolo)="Colesterolo Totale"
+label(data$colinesterasi)="Colinesterasi"
+label(data$ldh)="Lactate dehydrogenase (LDH)"
+label(data$ast)="AST"
+label(data$alt)="ALT"
+label(data$bili)="Bilirubin "
+label(data$presurgery_laboratory_exam_complete)="Complete?"
+label(data$rhc_comments)="Commenti"
+label(data$rhcdate)="Right Heart Cateterization date"
+label(data$rhc_hr)="Heart Rate "
+label(data$bpsys)="Systolic Blood Pressure"
+label(data$bpdia)="Diastolic Blood Pressure"
+label(data$bpmean)="Mean Blood Pressure"
+label(data$rhc_tmcs)="t-MCS during RHC"
+label(data$rhc_tmcs_type)="Type of t-MCS during RHC "
+label(data$rhc_intrp)="Inotropes during RHC (1,0)"
+label(data$rhc_intr_text)="Inotropes  therapy during RHC (description of drug names and dose)"
+label(data$rhc_vsprs)="Vasopressor during RHC (1,0)"
+label(data$rhc_vsprs_text)="Vasopressor therapy during RHC (description of drug names and dose)"
+label(data$rap)="Right Atrial Pressure (RAP)"
+label(data$pas)="Pulmonary Artery Systolic Pressure (PAS)"
+label(data$pad)="Pulmonary Artery Diastolic Pressure (PAD)"
+label(data$mpap)="Mean Pulmonary Artery Pressure (mPAP)"
+label(data$wedge)="Pulmonary Capillary Wedge Pressure (PCWP)"
+label(data$co)="Cardiac Output (CO)"
+label(data$ci)="Cardiac Index (CI)"
+label(data$pvr)="Pulmonary Vascular Resistance (PVR)"
+label(data$pvri)="Pulmonary Vascular Resistance Index (PVRi)"
+label(data$svi)=" Stroke Volume Index (SVi)"
+label(data$papi)="Pulmonary Artery Pulsatility Index (PAPi)"
+label(data$rhc_snp_comments)="Commenti"
+label(data$rhc_snp_maxdose)="NTP max dose"
+label(data$rhc_snp_intrp)="Dobutamine/Milrinone started/titrated as compared to Baseline"
+label(data$snp_rhc_hr)="post-SNP   Heart Rate "
+label(data$snp_bpsys)="post-SNP   Systolic Blood Pressure "
+label(data$snp_bpdia)="post-SNP   Diastolic Blood Pressure "
+label(data$snp_bpmean)="post-SNP   Mean Blood Pressure "
+label(data$snp_rap)="post-SNP   Right Atrial Pressure (RAP)"
+label(data$snp_pas)="post-SNP   Pulmonary Artery Systolic Pressure (PAP)"
+label(data$snp_pad)="post-SNP   Pulmonary Artery Diastolic Pressure (PAD)"
+label(data$snp_mpap)="post-SNP   Mean Pulmonary Artery Pressure (mPAP)"
+label(data$snp_wedge)="post-SNP   Pulmonary Capillary Wedge Pressure (PCWP)"
+label(data$snp_co)="post-SNP   Cardiac Output (CO)"
+label(data$snp_ci)="post-SNP   Cardiac Index (CI)"
+label(data$snp_pvr)="post-SNP   Pulmonary Vascular Resistance (PVR)"
+label(data$snp_pvri)="post-SNP   Pulmonary Vascular Resistance Index (PVRi) "
+label(data$snp_rvsvi)="post-SNP Stroke Volume Index  (SVi)"
+label(data$snp_papi)="post-SNP   Pulmonary Artery Pulsatility Index (PAPi)"
+label(data$right_heart_catheterization_complete)="Complete?"
+label(data$echo_date)="Date"
+label(data$height)="Height "
+label(data$weight)="Weight "
+label(data$echo_lvedd)="Diametro Diastolico "
+label(data$echo_fe)="Ejection Fraction"
+label(data$echo_mr)="Mitral regurgitation"
+label(data$echo_tr)="Tricuspid regurgitation"
+label(data$echo_ar)="Aortic regurgitation"
+label(data$echo_rvdiameter)="RV Diametro Telediastolico:"
+label(data$echo_rvdysfunction)="RV dysfunction"
+label(data$echo_rvfac)="RV Fractional Area Change (FAC)"
+label(data$echo_tapse)="TAPSE"
+label(data$echo_swave)="RV Onda S"
+label(data$echo_rvvagradient)="Gradiente Max Rigurgito (tricuspide)"
+label(data$echo_paps)="Pressione Sist. Art. Polmonare (PAPs):"
+label(data$echo_rap)="PAD stimata"
+label(data$bmi)="BMI"
+label(data$bsa)="BSA"
+label(data$nearest_echocardiogram_to_rhc_complete)="Complete?"
+label(data$intrp_pre)="PRE operative Inotropes/Vasopressor support"
+label(data$intrp_drug_pre___1)="Specify drug and max dose (mcg/kg/min) (choice=Adrenalina {adr_pre_max})"
+label(data$intrp_drug_pre___2)="Specify drug and max dose (mcg/kg/min) (choice=Noradrenalina {noradr_pre_max})"
+label(data$intrp_drug_pre___3)="Specify drug and max dose (mcg/kg/min) (choice=Dopamina {dopa_pre_max})"
+label(data$intrp_drug_pre___4)="Specify drug and max dose (mcg/kg/min) (choice=Dobutamina {dobu_pre_max})"
+label(data$intrp_drug_pre___5)="Specify drug and max dose (mcg/kg/min) (choice=Milrinone {milr_pre_max})"
+label(data$intrp_drug_pre___6)="Specify drug and max dose (mcg/kg/min) (choice=Levosimendan{levo_pre_max})"
+label(data$adr_pre_max)="adr_pre_max"
+label(data$noradr_pre_max)="noradr_pre_max"
+label(data$dopa_pre_max)="dopa_pre_max"
+label(data$dobu_pre_max)="dobu_pre_max"
+label(data$milr_pre_max)="milr_pre_max"
+label(data$levo_pre_max)="levo_pre_max"
+label(data$intrp_drug_admin___1)="Type of administration (choice=Preoperative administration)"
+label(data$intrp_drug_admin___2)="Type of administration (choice=Outpatient  or at home)"
+label(data$intrp_start)="Date of inotropes initiation"
+label(data$mcs)="PREOPERATORY Temporary Mechanical Circulatory Support (MCS)"
+label(data$mcs_type___0)="Type of MCS (choice=Intra Aortic Ballon Pump (IABP))"
+label(data$mcs_type___1)="Type of MCS (choice=Impella)"
+label(data$mcs_type___2)="Type of MCS (choice=ECMO)"
+label(data$mcs_type___3)="Type of MCS (choice=Paracorporeal LVAD)"
+label(data$mcs_type___4)="Type of MCS (choice=Right ventricle mechanical support)"
+label(data$mcs_start)="MCS starting Date"
+label(data$icu_discharge)="ICU discharge"
+label(data$icu_los)="ICU LoS (post LVAD surgery)"
+label(data$intrp_post)="POST operative Inotropes/Vasopressor support"
+label(data$intrp_drug_post___1)="Specify drug and max dose (choice=Adrenalina {adr_post_max})"
+label(data$intrp_drug_post___2)="Specify drug and max dose (choice=Noradrenalina {noradr_post_max})"
+label(data$intrp_drug_post___3)="Specify drug and max dose (choice=Dopamina {dopa_post_max})"
+label(data$intrp_drug_post___4)="Specify drug and max dose (choice=Dobutamina {dobu_post_max})"
+label(data$intrp_drug_post___5)="Specify drug and max dose (choice=Milrinone {milr_post_max})"
+label(data$intrp_drug_post___6)="Specify drug and max dose (choice=Levosimendan{levo_post_max})"
+label(data$adr_post_max)="adr_post_max"
+label(data$noradr_post_max)="noradr_post_max"
+label(data$dopa_post_max)="dopa_post_max"
+label(data$dobu_post_max)="dobu_post_max"
+label(data$milr_post_max)="milr_post_max"
+label(data$levo_post_max)="levo_post_max"
+label(data$intrp_stop)="End of inotropes/vasopressor therapy"
+label(data$mcs_post)="POST-OPERATORY Temporary Mechanical Circulatory Support (MCS)"
+label(data$mcs_type_post___0)="Type of MCS (choice=Intra Aortic Ballon Pump (IABP))"
+label(data$mcs_type_post___1)="Type of MCS (choice=Impella)"
+label(data$mcs_type_post___2)="Type of MCS (choice=ECMO)"
+label(data$mcs_type_post___4)="Type of MCS (choice=Right ventricle mechanical support)"
+label(data$mcs_stop)="MCS ending Date"
+label(data$prolonged_mv)="Prolonged Mechanical Ventilation"
+label(data$ino)="Need for iNO"
+label(data$tracheostomy)="Tracheostomy"
+label(data$crrt)="Continuous Renal Replacement Therapies (CRRT)"
+label(data$perioperative_support_and_icu_course_complete)="Complete?"
+label(data$h_admission)="Admission to Niguarda hospital "
+label(data$h_discharge)="Niguarda Hospital discharge"
+label(data$bleed)="In-hospital major bleeding"
+label(data$infection)="In-hospital major infection "
+label(data$neuro)="In-hospital neurological event"
+label(data$pumpdisf)="In-hospital pump dysfunction/thrombosis"
+label(data$hturgent)="Urgent HT"
+label(data$hturgent_reason)="Reason for urgent HT (descriptive)"
+label(data$h_death)="In-hospital death"
+label(data$h_death_reason___1)="In-hospital death reason (choice=Bleeding)"
+label(data$h_death_reason___2)="In-hospital death reason (choice=Cardiac arrest)"
+label(data$h_death_reason___3)="In-hospital death reason (choice=Cardiac decompensation)"
+label(data$h_death_reason___4)="In-hospital death reason (choice=Right Heart Failure)"
+label(data$h_death_reason___5)="In-hospital death reason (choice=Cardiac infarction)"
+label(data$h_death_reason___6)="In-hospital death reason (choice=Circulatory failure)"
+label(data$h_death_reason___7)="In-hospital death reason (choice=Infection/sepsis)"
+label(data$h_death_reason___8)="In-hospital death reason (choice=Multi-organ failure)"
+label(data$h_death_reason___9)="In-hospital death reason (choice=Renal failure)"
+label(data$h_death_reason___10)="In-hospital death reason (choice=Respiratory failure)"
+label(data$h_death_reason___11)="In-hospital death reason (choice=Stroke)"
+label(data$h_death_reason___12)="In-hospital death reason (choice=Suicide)"
+label(data$h_death_reason___13)="In-hospital death reason (choice=Pump dysfunction)"
+label(data$h_death_reason___14)="In-hospital death reason (choice=Other)"
+label(data$h_death_reason___15)="In-hospital death reason (choice=Unknown)"
+label(data$early_rv_failure)="Early Right Ventricular Failure"
+label(data$late_rv_failure)="Late Right Ventricular Failure"
+label(data$in_hospital_outcomes_complete)="Complete?"
+label(data$fu_rv_failure)="Right Ventricular Failure"
+label(data$data_scompenso_vd)="Date of Right Ventricular Failure"
+label(data$fu_vad_trombosi)="LVAD Thrombosis"
+label(data$data_fu_vad_trombosi)="Date of LVAD thrombosis"
+label(data$fu_stroke)="Stroke"
+label(data$data_fu_stroke)="Date of Stroke"
+label(data$fu_emorragia_cerebrale)="Brain Haemorrhage"
+label(data$date_fu_emorragia_cereb)="Date of Brain Haemorrhage"
+label(data$fu_aritmia_maggiore)="Major arrhythmia"
+label(data$data_fu_aritmia_maggiore)="Date of Major arrhythmia"
+label(data$gi_bleeding_fu)="Gastrointestinal Bleeding"
+label(data$data_gi_bleeding_fu)="Date of Gastrointestinal Bleeding"
+label(data$fu_altri_interventi_chirurgici)="Other Surgical Interventions"
+label(data$data_altri_interventi_fu)="Date of Other Surgical Interventions"
+label(data$tipo_altro_intervento)="Other Surgical Interventions Description"
+label(data$fu_neoplasia)="Neoplasia"
+label(data$neoplasia_type)="Neoplasia type"
+label(data$altra_complicanza)="Altra complicanza"
+label(data$nit)="Heart Transplant Listing?"
+label(data$data_nit)="Listing date"
+label(data$follow_up_complete)="Complete?"
+label(data$li_event_date)="Data infezione"
+label(data$li_infection_site)="Sede infezione"
+label(data$li_infection_site_other)="Specifica sede infezione"
+label(data$li_sbsi)="Specifica sede batteriemia secondaria"
+label(data$li_sbsi_other)="Specifica altra batteriemia secondaria"
+label(data$li_lvad_infection)="LVAD-specific infection"
+label(data$li_lvad_infection_other)="Specifica sede infezione"
+label(data$li_sepsi)="Sepsi?"
+label(data$li_microorganism)="Microorganismo isolato"
+label(data$li_microorganism_other)="Specifica microorganismo isolato"
+label(data$li_microorganism_2)="Microorganismo isolato"
+label(data$li_microorganism_other_2)="Specifica microorganismo isolato"
+label(data$li_microorganism_3)="Microorganismo isolato"
+label(data$li_microorganism_other_3)="Specifica microorganismo isolato"
+label(data$li_mdro)="MDRO"
+label(data$li_mdro_other)="Specifica MDRO"
+label(data$li_cultures)="Tipo di isolamento"
+label(data$li_cultures_other)="Specifica tipo di isolamento"
+label(data$li_atb_1)="Antibiotico 1"
+label(data$li_atb_1_other)="Specifica antibiotico 1"
+label(data$li_atb_1_start)="Inizio terapia"
+label(data$li_atb_1_end)="Fine terapia"
+label(data$li_atb_2)="Antibiotico 2"
+label(data$li_atb_2_other)="Specifica antibiotico 2"
+label(data$li_atb_2_start)="Inizio terapia"
+label(data$li_atb_2_end)="Fine terapia"
+label(data$li_atb_3)="Antibiotico 3"
+label(data$li_atb_3_other)="Specifica antibiotico 3"
+label(data$li_atb_3_start)="Inizio terapia"
+label(data$li_atb_3_end)="Fine terapia"
+label(data$li_atb_4)="Antibiotico 4"
+label(data$li_atb_4_other)="Specifica antibiotico 4"
+label(data$li_atb_4_start)="Inizio terapia"
+label(data$li_atb_4_end)="Fine terapia"
+label(data$li_infection_sheet_comments)="Commenti"
+label(data$infezioni_lvad_complete)="Complete?"
+label(data$htx_date)="Heart Transplant Date"
+label(data$htx_urgent)="Tx in urgenza?"
+label(data$htx_urgent_reason)="Motivo urgenza"
+label(data$htx_urgent_reason_other)="Specificare motivo urgenza"
+label(data$admission_date)="Data inizio ricovero per TX"
+label(data$discharge_date)="Data dimissione ricovero TX"
+label(data$htx_induction)="Induzione al trapianto "
+label(data$htx_induction_other)="Specificare induzione al trapianto"
+label(data$immunotherapy___1)="Terapia immunosoppressiva  (choice=Ciclosporina)"
+label(data$immunotherapy___2)="Terapia immunosoppressiva  (choice=Micofenolato)"
+label(data$immunotherapy___3)="Terapia immunosoppressiva  (choice=Tacrolimus)"
+label(data$immunotherapy___4)="Terapia immunosoppressiva  (choice=Everolimus)"
+label(data$immunotherapy___5)="Terapia immunosoppressiva  (choice=Sirolimus)"
+label(data$immunotherapy___6)="Terapia immunosoppressiva  (choice=Steroide)"
+label(data$immunotherapy___7)="Terapia immunosoppressiva  (choice=Betalecept)"
+label(data$immunotherapy___8)="Terapia immunosoppressiva  (choice=Altro)"
+label(data$immunotherapy_other)="Specificare terapia immunosoppressiva "
+label(data$cmv_recipient)="Sierologia CMV ricevente"
+label(data$cmv_donor)="Sierologia CMV donatore"
+label(data$transplant_notes)="Note"
+label(data$transplant_information_complete)="Complete?"
+label(data$ht_event_date)="Data infezione"
+label(data$ht_infection_site)="Sede infezione"
+label(data$ht_sbsi)="Specifica sede batteriemia secondaria"
+label(data$ht_sbsi_other)="Specifica altra batteriemia secondaria"
+label(data$ht_sofa)="Sepsi (SOFA)"
+label(data$ht_microorganism)="Microorganismo isolato"
+label(data$ht_mdro)="MDRO"
+label(data$ht_mdro_other)="Specifica MDRO"
+label(data$ht_cultures)="Tipo di isolamento"
+label(data$ht_cultures_other)="Specifica tipo di isolamento"
+label(data$ht_atb_1)="Antibiotico 1"
+label(data$ht_atb_1_other)="Specifica antibiotico 1"
+label(data$ht_atb_1_start)="Inizio terapia"
+label(data$ht_atb_1_end)="Fine terapia"
+label(data$ht_atb_2)="Antibiotico 2"
+label(data$ht_atb_2_other)="Specifica antibiotico 2"
+label(data$ht_atb_2_start)="Inizio terapia"
+label(data$ht_atb_2_end)="Fine terapia"
+label(data$ht_atb_3)="Antibiotico 3"
+label(data$ht_atb_3_other)="Specifica antibiotico 3"
+label(data$ht_atb_3_start)="Inizio terapia"
+label(data$ht_atb_3_end)="Fine terapia"
+label(data$ht_cmv_reactivation)="Riattivazione CMV"
+label(data$ht_cmv_date)="Data riattivazione CMV"
+label(data$ht_cmv_dna)="CMV DNA  (UI) allavvio tp"
+label(data$ht_cmv_therapy)="Terapia CMV"
+label(data$ht_cmv_therapy_start)="Data inizio terapia CMV"
+label(data$ht_cmv_therapy_end)="Data fine terapia CMV"
+label(data$ht_acute_rejection)="Rigetto acuto"
+label(data$ht_ar_therapy___1)="Terapia rigetto (choice=Steroide endovena)"
+label(data$ht_ar_therapy___2)="Terapia rigetto (choice=Steroide per os)"
+label(data$ht_ar_therapy___3)="Terapia rigetto (choice=Timoglobuline)"
+label(data$ht_ar_therapy___4)="Terapia rigetto (choice=Altro)"
+label(data$ht_ar_therapy_other)="Specifica altro "
+label(data$ht_ar_therapy_dose)="Dosaggio terapia antirigetto "
+label(data$ht_ar_therapy_date)="Data somministrazione terapia antirigetto "
+label(data$ht_infection_sheet_notes)="Note"
+label(data$infezioni_htx_complete)="Complete?"
+label(data$lastfup)="Last Follow Up"
+label(data$death_date)="Death Date"
+label(data$death_cause)="Cause of death (descriptive)"
+label(data$status)="Status"
+label(data$survival_data_complete)="Complete?"
+#Setting Units
+
+units(data$height)="cm"
+units(data$weight)="kilograms"
+units(data$bmi)="kilograms"
+
+#Setting Factors(will create new variable for factors)
+data$redcap_repeat_instrument.factor = factor(data$redcap_repeat_instrument,levels=c("infezioni_lvad","infezioni_htx"))
+data$sex.factor = factor(data$sex,levels=c("0","1"))
+data$intermacs.factor = factor(data$intermacs,levels=c("1","2","3","4","5","6","7"))
+data$lvad_mod.factor = factor(data$lvad_mod,levels=c("1","2","3","4","5"))
+data$lvad_ind.factor = factor(data$lvad_ind,levels=c("1","2","3","4"))
+data$cmp_aethiology.factor = factor(data$cmp_aethiology,levels=c("1","2","3","4","5","6","7","8","9"))
+data$demographics_complete.factor = factor(data$demographics_complete,levels=c("0","1","2"))
+data$hyper.factor = factor(data$hyper,levels=c("1","0"))
+data$dyslip.factor = factor(data$dyslip,levels=c("1","0"))
+data$diabetes.factor = factor(data$diabetes,levels=c("1","0"))
+data$renal_insuff.factor = factor(data$renal_insuff,levels=c("1","0"))
+data$renal_stadiation.factor = factor(data$renal_stadiation,levels=c("1","2","3","4","5","6"))
+data$smoke.factor = factor(data$smoke,levels=c("1","0"))
+data$drugs.factor = factor(data$drugs,levels=c("1","0"))
+data$coronary_dis.factor = factor(data$coronary_dis,levels=c("1","0"))
+data$coronary_int___1.factor = factor(data$coronary_int___1,levels=c("0","1"))
+data$coronary_int___2.factor = factor(data$coronary_int___2,levels=c("0","1"))
+data$coronary_int___3.factor = factor(data$coronary_int___3,levels=c("0","1"))
+data$infarction.factor = factor(data$infarction,levels=c("0","1","2"))
+data$arrhyt.factor = factor(data$arrhyt,levels=c("1","0"))
+data$arrhyt_type___1.factor = factor(data$arrhyt_type___1,levels=c("0","1"))
+data$arrhyt_type___2.factor = factor(data$arrhyt_type___2,levels=c("0","1"))
+data$arrhyt_type___3.factor = factor(data$arrhyt_type___3,levels=c("0","1"))
+data$arrhyt_type___4.factor = factor(data$arrhyt_type___4,levels=c("0","1"))
+data$valve_rep.factor = factor(data$valve_rep,levels=c("1","0"))
+data$pm.factor = factor(data$pm,levels=c("1","0"))
+data$resp_dis.factor = factor(data$resp_dis,levels=c("1","0"))
+data$resp_dis_type___1.factor = factor(data$resp_dis_type___1,levels=c("0","1"))
+data$resp_dis_type___2.factor = factor(data$resp_dis_type___2,levels=c("0","1"))
+data$resp_dis_type___3.factor = factor(data$resp_dis_type___3,levels=c("0","1"))
+data$resp_dis_type___5.factor = factor(data$resp_dis_type___5,levels=c("0","1"))
+data$resp_dis_type___4.factor = factor(data$resp_dis_type___4,levels=c("0","1"))
+data$neuro_hist.factor = factor(data$neuro_hist,levels=c("1","0"))
+data$neuro_type___1.factor = factor(data$neuro_type___1,levels=c("0","1"))
+data$neuro_type___2.factor = factor(data$neuro_type___2,levels=c("0","1"))
+data$neuro_type___3.factor = factor(data$neuro_type___3,levels=c("0","1"))
+data$neuro_type___4.factor = factor(data$neuro_type___4,levels=c("0","1"))
+data$neuro_type___5.factor = factor(data$neuro_type___5,levels=c("0","1"))
+data$neoplasia.factor = factor(data$neoplasia,levels=c("1","0"))
+data$surgery.factor = factor(data$surgery,levels=c("1","0"))
+data$sternotomy.factor = factor(data$sternotomy,levels=c("1","0"))
+data$sternotomy_n.factor = factor(data$sternotomy_n,levels=c("1","2"))
+data$medical_history_complete.factor = factor(data$medical_history_complete,levels=c("0","1","2"))
+data$presurgery_laboratory_exam_complete.factor = factor(data$presurgery_laboratory_exam_complete,levels=c("0","1","2"))
+data$rhc_tmcs.factor = factor(data$rhc_tmcs,levels=c("1","0"))
+data$rhc_intrp.factor = factor(data$rhc_intrp,levels=c("1","0"))
+data$rhc_vsprs.factor = factor(data$rhc_vsprs,levels=c("1","0"))
+data$rhc_snp_intrp.factor = factor(data$rhc_snp_intrp,levels=c("1","0"))
+data$right_heart_catheterization_complete.factor = factor(data$right_heart_catheterization_complete,levels=c("0","1","2"))
+data$echo_mr.factor = factor(data$echo_mr,levels=c("0","1","2","3","4"))
+data$echo_tr.factor = factor(data$echo_tr,levels=c("0","1","2","3","4"))
+data$echo_ar.factor = factor(data$echo_ar,levels=c("0","1","2","3","4"))
+data$echo_rvdysfunction.factor = factor(data$echo_rvdysfunction,levels=c("1","0"))
+data$nearest_echocardiogram_to_rhc_complete.factor = factor(data$nearest_echocardiogram_to_rhc_complete,levels=c("0","1","2"))
+data$intrp_pre.factor = factor(data$intrp_pre,levels=c("1","0"))
+data$intrp_drug_pre___1.factor = factor(data$intrp_drug_pre___1,levels=c("0","1"))
+data$intrp_drug_pre___2.factor = factor(data$intrp_drug_pre___2,levels=c("0","1"))
+data$intrp_drug_pre___3.factor = factor(data$intrp_drug_pre___3,levels=c("0","1"))
+data$intrp_drug_pre___4.factor = factor(data$intrp_drug_pre___4,levels=c("0","1"))
+data$intrp_drug_pre___5.factor = factor(data$intrp_drug_pre___5,levels=c("0","1"))
+data$intrp_drug_pre___6.factor = factor(data$intrp_drug_pre___6,levels=c("0","1"))
+data$intrp_drug_admin___1.factor = factor(data$intrp_drug_admin___1,levels=c("0","1"))
+data$intrp_drug_admin___2.factor = factor(data$intrp_drug_admin___2,levels=c("0","1"))
+data$mcs.factor = factor(data$mcs,levels=c("1","0"))
+data$mcs_type___0.factor = factor(data$mcs_type___0,levels=c("0","1"))
+data$mcs_type___1.factor = factor(data$mcs_type___1,levels=c("0","1"))
+data$mcs_type___2.factor = factor(data$mcs_type___2,levels=c("0","1"))
+data$mcs_type___3.factor = factor(data$mcs_type___3,levels=c("0","1"))
+data$mcs_type___4.factor = factor(data$mcs_type___4,levels=c("0","1"))
+data$intrp_post.factor = factor(data$intrp_post,levels=c("1","0"))
+data$intrp_drug_post___1.factor = factor(data$intrp_drug_post___1,levels=c("0","1"))
+data$intrp_drug_post___2.factor = factor(data$intrp_drug_post___2,levels=c("0","1"))
+data$intrp_drug_post___3.factor = factor(data$intrp_drug_post___3,levels=c("0","1"))
+data$intrp_drug_post___4.factor = factor(data$intrp_drug_post___4,levels=c("0","1"))
+data$intrp_drug_post___5.factor = factor(data$intrp_drug_post___5,levels=c("0","1"))
+data$intrp_drug_post___6.factor = factor(data$intrp_drug_post___6,levels=c("0","1"))
+data$mcs_post.factor = factor(data$mcs_post,levels=c("1","0"))
+data$mcs_type_post___0.factor = factor(data$mcs_type_post___0,levels=c("0","1"))
+data$mcs_type_post___1.factor = factor(data$mcs_type_post___1,levels=c("0","1"))
+data$mcs_type_post___2.factor = factor(data$mcs_type_post___2,levels=c("0","1"))
+data$mcs_type_post___4.factor = factor(data$mcs_type_post___4,levels=c("0","1"))
+data$prolonged_mv.factor = factor(data$prolonged_mv,levels=c("1","0"))
+data$ino.factor = factor(data$ino,levels=c("1","0"))
+data$tracheostomy.factor = factor(data$tracheostomy,levels=c("1","0"))
+data$crrt.factor = factor(data$crrt,levels=c("1","0"))
+data$perioperative_support_and_icu_course_complete.factor = factor(data$perioperative_support_and_icu_course_complete,levels=c("0","1","2"))
+data$bleed.factor = factor(data$bleed,levels=c("1","0"))
+data$infection.factor = factor(data$infection,levels=c("1","0"))
+data$neuro.factor = factor(data$neuro,levels=c("1","0"))
+data$pumpdisf.factor = factor(data$pumpdisf,levels=c("1","0"))
+data$hturgent.factor = factor(data$hturgent,levels=c("1","0"))
+data$h_death.factor = factor(data$h_death,levels=c("1","0"))
+data$h_death_reason___1.factor = factor(data$h_death_reason___1,levels=c("0","1"))
+data$h_death_reason___2.factor = factor(data$h_death_reason___2,levels=c("0","1"))
+data$h_death_reason___3.factor = factor(data$h_death_reason___3,levels=c("0","1"))
+data$h_death_reason___4.factor = factor(data$h_death_reason___4,levels=c("0","1"))
+data$h_death_reason___5.factor = factor(data$h_death_reason___5,levels=c("0","1"))
+data$h_death_reason___6.factor = factor(data$h_death_reason___6,levels=c("0","1"))
+data$h_death_reason___7.factor = factor(data$h_death_reason___7,levels=c("0","1"))
+data$h_death_reason___8.factor = factor(data$h_death_reason___8,levels=c("0","1"))
+data$h_death_reason___9.factor = factor(data$h_death_reason___9,levels=c("0","1"))
+data$h_death_reason___10.factor = factor(data$h_death_reason___10,levels=c("0","1"))
+data$h_death_reason___11.factor = factor(data$h_death_reason___11,levels=c("0","1"))
+data$h_death_reason___12.factor = factor(data$h_death_reason___12,levels=c("0","1"))
+data$h_death_reason___13.factor = factor(data$h_death_reason___13,levels=c("0","1"))
+data$h_death_reason___14.factor = factor(data$h_death_reason___14,levels=c("0","1"))
+data$h_death_reason___15.factor = factor(data$h_death_reason___15,levels=c("0","1"))
+data$early_rv_failure.factor = factor(data$early_rv_failure,levels=c("1","0"))
+data$late_rv_failure.factor = factor(data$late_rv_failure,levels=c("1","0"))
+data$in_hospital_outcomes_complete.factor = factor(data$in_hospital_outcomes_complete,levels=c("0","1","2"))
+data$fu_rv_failure.factor = factor(data$fu_rv_failure,levels=c("1","0"))
+data$fu_vad_trombosi.factor = factor(data$fu_vad_trombosi,levels=c("1","0"))
+data$fu_stroke.factor = factor(data$fu_stroke,levels=c("1","0"))
+data$fu_emorragia_cerebrale.factor = factor(data$fu_emorragia_cerebrale,levels=c("1","0"))
+data$fu_aritmia_maggiore.factor = factor(data$fu_aritmia_maggiore,levels=c("1","0"))
+data$gi_bleeding_fu.factor = factor(data$gi_bleeding_fu,levels=c("1","0"))
+data$fu_altri_interventi_chirurgici.factor = factor(data$fu_altri_interventi_chirurgici,levels=c("1","0"))
+data$fu_neoplasia.factor = factor(data$fu_neoplasia,levels=c("1","0"))
+data$nit.factor = factor(data$nit,levels=c("1","0"))
+data$follow_up_complete.factor = factor(data$follow_up_complete,levels=c("0","1","2"))
+data$li_infection_site.factor = factor(data$li_infection_site,levels=c("1","2","3","4","5","6","7","8","9","10","11","12"))
+data$li_sbsi.factor = factor(data$li_sbsi,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13"))
+data$li_lvad_infection.factor = factor(data$li_lvad_infection,levels=c("1","2","3","4","5"))
+data$li_sepsi.factor = factor(data$li_sepsi,levels=c("1","0"))
+data$li_microorganism.factor = factor(data$li_microorganism,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67"))
+data$li_microorganism_2.factor = factor(data$li_microorganism_2,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67"))
+data$li_microorganism_3.factor = factor(data$li_microorganism_3,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67"))
+data$li_mdro.factor = factor(data$li_mdro,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13"))
+data$li_cultures.factor = factor(data$li_cultures,levels=c("1","2","3"))
+data$li_atb_1.factor = factor(data$li_atb_1,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46"))
+data$li_atb_2.factor = factor(data$li_atb_2,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46"))
+data$li_atb_3.factor = factor(data$li_atb_3,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46"))
+data$li_atb_4.factor = factor(data$li_atb_4,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46"))
+data$infezioni_lvad_complete.factor = factor(data$infezioni_lvad_complete,levels=c("0","1","2"))
+data$htx_urgent.factor = factor(data$htx_urgent,levels=c("1","0"))
+data$htx_urgent_reason.factor = factor(data$htx_urgent_reason,levels=c("1","2","3"))
+data$htx_induction.factor = factor(data$htx_induction,levels=c("1","2","3","4","5"))
+data$immunotherapy___1.factor = factor(data$immunotherapy___1,levels=c("0","1"))
+data$immunotherapy___2.factor = factor(data$immunotherapy___2,levels=c("0","1"))
+data$immunotherapy___3.factor = factor(data$immunotherapy___3,levels=c("0","1"))
+data$immunotherapy___4.factor = factor(data$immunotherapy___4,levels=c("0","1"))
+data$immunotherapy___5.factor = factor(data$immunotherapy___5,levels=c("0","1"))
+data$immunotherapy___6.factor = factor(data$immunotherapy___6,levels=c("0","1"))
+data$immunotherapy___7.factor = factor(data$immunotherapy___7,levels=c("0","1"))
+data$immunotherapy___8.factor = factor(data$immunotherapy___8,levels=c("0","1"))
+data$cmv_recipient.factor = factor(data$cmv_recipient,levels=c("0","1"))
+data$cmv_donor.factor = factor(data$cmv_donor,levels=c("0","1"))
+data$transplant_information_complete.factor = factor(data$transplant_information_complete,levels=c("0","1","2"))
+data$ht_infection_site.factor = factor(data$ht_infection_site,levels=c("1","2","3","4","5","6","7","8","9","10","11"))
+data$ht_sbsi.factor = factor(data$ht_sbsi,levels=c("1","2","3","4","5","6","7","8","9","10","11","12"))
+data$ht_sofa.factor = factor(data$ht_sofa,levels=c("1","0"))
+data$ht_microorganism.factor = factor(data$ht_microorganism,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67"))
+data$ht_mdro.factor = factor(data$ht_mdro,levels=c("1","2","3","4","5","6","14","7","8","9","10","11","12","13"))
+data$ht_cultures.factor = factor(data$ht_cultures,levels=c("1","2","4","5","6","7","8","9","10","11","3"))
+data$ht_atb_1.factor = factor(data$ht_atb_1,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46"))
+data$ht_atb_2.factor = factor(data$ht_atb_2,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46"))
+data$ht_atb_3.factor = factor(data$ht_atb_3,levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46"))
+data$ht_cmv_reactivation.factor = factor(data$ht_cmv_reactivation,levels=c("1","0"))
+data$ht_cmv_therapy.factor = factor(data$ht_cmv_therapy,levels=c("1","2","3","4","5"))
+data$ht_acute_rejection.factor = factor(data$ht_acute_rejection,levels=c("1","0"))
+data$ht_ar_therapy___1.factor = factor(data$ht_ar_therapy___1,levels=c("0","1"))
+data$ht_ar_therapy___2.factor = factor(data$ht_ar_therapy___2,levels=c("0","1"))
+data$ht_ar_therapy___3.factor = factor(data$ht_ar_therapy___3,levels=c("0","1"))
+data$ht_ar_therapy___4.factor = factor(data$ht_ar_therapy___4,levels=c("0","1"))
+data$infezioni_htx_complete.factor = factor(data$infezioni_htx_complete,levels=c("0","1","2"))
+data$status.factor = factor(data$status,levels=c("0","1"))
+data$survival_data_complete.factor = factor(data$survival_data_complete,levels=c("0","1","2"))
+
+levels(data$redcap_repeat_instrument.factor)=c("Infezioni Lvad","Infezioni Htx")
+levels(data$sex.factor)=c("Male","Female")
+levels(data$intermacs.factor)=c("1. Critical cardiogenic shock","2. Progressive decline on inotropic support","3. Stable but inotrope dependent","4. Resting symptoms home on oral therapy","5. Exertion intolerant","6. Exertion limited","7. Advanced NYHA Class III symptoms")
+levels(data$lvad_mod.factor)=c("HeartMate 2","HeartWare HVAD","HeartMate 3","Reliant AVAD","Incor Berlin Heart")
+levels(data$lvad_ind.factor)=c("BTT - Bridge to Transplant","DT - Destination Therapy","BTC - Bridge to Candidacy","BTR - Bridge to Recovery")
+levels(data$cmp_aethiology.factor)=c("Ischemic","Valvular","DCM","Inflammatory cardiomyopathy","Restrictive","Arrhythmogenic Right Ventricular Cardiomyopathy (ARVC)","Tachicardiomyopathy","Hypertrophic  Cardiomyopathy","Radiation-induced cardiomyopathy")
+levels(data$demographics_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$hyper.factor)=c("Yes","No")
+levels(data$dyslip.factor)=c("Yes","No")
+levels(data$diabetes.factor)=c("Yes","No")
+levels(data$renal_insuff.factor)=c("Yes","No")
+levels(data$renal_stadiation.factor)=c("1","2","3a","3b","4","5")
+levels(data$smoke.factor)=c("Yes","No")
+levels(data$drugs.factor)=c("Yes","No")
+levels(data$coronary_dis.factor)=c("Yes","No")
+levels(data$coronary_int___1.factor)=c("Unchecked","Checked")
+levels(data$coronary_int___2.factor)=c("Unchecked","Checked")
+levels(data$coronary_int___3.factor)=c("Unchecked","Checked")
+levels(data$infarction.factor)=c("no","< 90 gg",">90 gg")
+levels(data$arrhyt.factor)=c("Yes","No")
+levels(data$arrhyt_type___1.factor)=c("Unchecked","Checked")
+levels(data$arrhyt_type___2.factor)=c("Unchecked","Checked")
+levels(data$arrhyt_type___3.factor)=c("Unchecked","Checked")
+levels(data$arrhyt_type___4.factor)=c("Unchecked","Checked")
+levels(data$valve_rep.factor)=c("Yes","No")
+levels(data$pm.factor)=c("Yes","No")
+levels(data$resp_dis.factor)=c("Yes","No")
+levels(data$resp_dis_type___1.factor)=c("Unchecked","Checked")
+levels(data$resp_dis_type___2.factor)=c("Unchecked","Checked")
+levels(data$resp_dis_type___3.factor)=c("Unchecked","Checked")
+levels(data$resp_dis_type___5.factor)=c("Unchecked","Checked")
+levels(data$resp_dis_type___4.factor)=c("Unchecked","Checked")
+levels(data$neuro_hist.factor)=c("Yes","No")
+levels(data$neuro_type___1.factor)=c("Unchecked","Checked")
+levels(data$neuro_type___2.factor)=c("Unchecked","Checked")
+levels(data$neuro_type___3.factor)=c("Unchecked","Checked")
+levels(data$neuro_type___4.factor)=c("Unchecked","Checked")
+levels(data$neuro_type___5.factor)=c("Unchecked","Checked")
+levels(data$neoplasia.factor)=c("Yes","No")
+levels(data$surgery.factor)=c("Yes","No")
+levels(data$sternotomy.factor)=c("Yes","No")
+levels(data$sternotomy_n.factor)=c("1",">1")
+levels(data$medical_history_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$presurgery_laboratory_exam_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$rhc_tmcs.factor)=c("Yes","No")
+levels(data$rhc_intrp.factor)=c("Yes","No")
+levels(data$rhc_vsprs.factor)=c("Yes","No")
+levels(data$rhc_snp_intrp.factor)=c("Yes","No")
+levels(data$right_heart_catheterization_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$echo_mr.factor)=c("none/trace","mild","moderate","moderate-to-severe","severe")
+levels(data$echo_tr.factor)=c("none/trace","mild","moderate","moderate-to-severe","severe")
+levels(data$echo_ar.factor)=c("none/trace","mild","moderate","moderate-to-severe","severe")
+levels(data$echo_rvdysfunction.factor)=c("Yes","No")
+levels(data$nearest_echocardiogram_to_rhc_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$intrp_pre.factor)=c("Yes","No")
+levels(data$intrp_drug_pre___1.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_pre___2.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_pre___3.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_pre___4.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_pre___5.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_pre___6.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_admin___1.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_admin___2.factor)=c("Unchecked","Checked")
+levels(data$mcs.factor)=c("Yes","No")
+levels(data$mcs_type___0.factor)=c("Unchecked","Checked")
+levels(data$mcs_type___1.factor)=c("Unchecked","Checked")
+levels(data$mcs_type___2.factor)=c("Unchecked","Checked")
+levels(data$mcs_type___3.factor)=c("Unchecked","Checked")
+levels(data$mcs_type___4.factor)=c("Unchecked","Checked")
+levels(data$intrp_post.factor)=c("Yes","No")
+levels(data$intrp_drug_post___1.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_post___2.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_post___3.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_post___4.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_post___5.factor)=c("Unchecked","Checked")
+levels(data$intrp_drug_post___6.factor)=c("Unchecked","Checked")
+levels(data$mcs_post.factor)=c("Yes","No")
+levels(data$mcs_type_post___0.factor)=c("Unchecked","Checked")
+levels(data$mcs_type_post___1.factor)=c("Unchecked","Checked")
+levels(data$mcs_type_post___2.factor)=c("Unchecked","Checked")
+levels(data$mcs_type_post___4.factor)=c("Unchecked","Checked")
+levels(data$prolonged_mv.factor)=c("Yes","No")
+levels(data$ino.factor)=c("Yes","No")
+levels(data$tracheostomy.factor)=c("Yes","No")
+levels(data$crrt.factor)=c("Yes","No")
+levels(data$perioperative_support_and_icu_course_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$bleed.factor)=c("Yes","No")
+levels(data$infection.factor)=c("Yes","No")
+levels(data$neuro.factor)=c("Yes","No")
+levels(data$pumpdisf.factor)=c("Yes","No")
+levels(data$hturgent.factor)=c("Yes","No")
+levels(data$h_death.factor)=c("Yes","No")
+levels(data$h_death_reason___1.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___2.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___3.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___4.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___5.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___6.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___7.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___8.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___9.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___10.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___11.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___12.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___13.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___14.factor)=c("Unchecked","Checked")
+levels(data$h_death_reason___15.factor)=c("Unchecked","Checked")
+levels(data$early_rv_failure.factor)=c("Yes","No")
+levels(data$late_rv_failure.factor)=c("Yes","No")
+levels(data$in_hospital_outcomes_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$fu_rv_failure.factor)=c("Yes","No")
+levels(data$fu_vad_trombosi.factor)=c("Yes","No")
+levels(data$fu_stroke.factor)=c("Yes","No")
+levels(data$fu_emorragia_cerebrale.factor)=c("Yes","No")
+levels(data$fu_aritmia_maggiore.factor)=c("Yes","No")
+levels(data$gi_bleeding_fu.factor)=c("Yes","No")
+levels(data$fu_altri_interventi_chirurgici.factor)=c("Yes","No")
+levels(data$fu_neoplasia.factor)=c("Yes","No")
+levels(data$nit.factor)=c("Yes","No")
+levels(data$follow_up_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$li_infection_site.factor)=c("Batteriemia primaria (pBSI)","Batteriemia secondaria (sBSI)","L-VAD specific infection","Cute e tessuti molli (non L-VAD relata)","Tratto gastro enterico","Intra-addominale","Sito chirurgico (non L-VAD relata)","SNC","Genitali","Osteomielite, infezione di protesi articolare","Polmonite","Altro")
+levels(data$li_sbsi.factor)=c("Catetere vascolare (CLABSI)","L-VAD specific infection","Endocardite non LVAD relata (?)","Cute e tessuti molli (non L-VAD relata)","Tratto gastro enterico","Intra-addominale","Sito chirurgico (non L-VAD relata)","SNC","Genitali","Osteomielite, infezione di protesi articolare","Polmonite","Infezione delle vie urinarie","Altro")
+levels(data$li_lvad_infection.factor)=c("Pompa, tasca, cannula","Driveline","Mediastinite / Osteomielite","Endocardite","Altro")
+levels(data$li_sepsi.factor)=c("Yes","No")
+levels(data$li_microorganism.factor)=c("Achromobacter xyloxidans","Acinetobacter baumannii complex","Aerococcus spp","Aeromonas spp.","Bacteroides spp.","Brucella spp.","Burkholderia cepacia complex","Chlamydia penumoniae","Citrobacter spp","Clostridioides difficile","Clostridioides spp.","Corynebacterium spp.","Enterobacter cloacae","Enterobacter spp.","Entertococcus faecalis","Enterococcus faecium","Enterococcus spp.","Escherichia coli","Haemophilus influnzae","Klebsiella pneumoniae","Legionalla penumophila","Listeria monocytogenes","Micrococcus spp.","Morganella spp.","Mycoplasma pneumoniae","Neisseria gonorrhoeae","Neisseria meningitidis","Prevotella spp","Proteus spp.","Providencia spp.","Pseudomonas aeruginosa","Pseudomonas spp.","Raoultella spp.","Serratia marcescens","Staphylococcus aureus","Staphylococcus capitis","Staphylococcus caprae","Staphylococcus epidermidis","Staphylococcus gallinarum","Staphylococcus haemolyticus","Staphylococcus hominis","Staphylococcus intermedius","Staphylococcus lugdunensis","Staphylococcus sapophyticus","Staphylococcus warneri","Stenotrophomonas maltophilia","Streptococcus agalactiae","Streptococcus anginosus","Streptococcus constellatus","Streptococcus gallolyticus","Streptococcus dysgalactiae","Streptococcus infantarius","Streptococcus sanguinis","Streptococcus suis","Streptococcus mitis","Streptococcus pneumoniae","Streptococcus mutans","Vibrio spp.","Candida albicans","Candida parapsilosis","Candida tropicalis","Candida galbrata","Candida krusei","Candida","Aspergillus fumigatus","Aspergillus niger","Altro")
+levels(data$li_microorganism_2.factor)=c("Achromobacter xyloxidans","Acinetobacter baumannii complex","Aerococcus spp","Aeromonas spp.","Bacteroides spp.","Brucella spp.","Burkholderia cepacia complex","Chlamydia penumoniae","Citrobacter spp","Clostridioides difficile","Clostridioides spp.","Corynebacterium spp.","Enterobacter cloacae","Enterobacter spp.","Entertococcus faecalis","Enterococcus faecium","Enterococcus spp.","Escherichia coli","Haemophilus influnzae","Klebsiella pneumoniae","Legionalla penumophila","Listeria monocytogenes","Micrococcus spp.","Morganella spp.","Mycoplasma pneumoniae","Neisseria gonorrhoeae","Neisseria meningitidis","Prevotella spp","Proteus spp.","Providencia spp.","Pseudomonas aeruginosa","Pseudomonas spp.","Raoultella spp.","Serratia marcescens","Staphylococcus aureus","Staphylococcus capitis","Staphylococcus caprae","Staphylococcus epidermidis","Staphylococcus gallinarum","Staphylococcus haemolyticus","Staphylococcus hominis","Staphylococcus intermedius","Staphylococcus lugdunensis","Staphylococcus sapophyticus","Staphylococcus warneri","Stenotrophomonas maltophilia","Streptococcus agalactiae","Streptococcus anginosus","Streptococcus constellatus","Streptococcus gallolyticus","Streptococcus dysgalactiae","Streptococcus infantarius","Streptococcus sanguinis","Streptococcus suis","Streptococcus mitis","Streptococcus pneumoniae","Streptococcus mutans","Vibrio spp.","Candida albicans","Candida parapsilosis","Candida tropicalis","Candida galbrata","Candida krusei","Candida","Aspergillus fumigatus","Aspergillus niger","Altro")
+levels(data$li_microorganism_3.factor)=c("Achromobacter xyloxidans","Acinetobacter baumannii complex","Aerococcus spp","Aeromonas spp.","Bacteroides spp.","Brucella spp.","Burkholderia cepacia complex","Chlamydia penumoniae","Citrobacter spp","Clostridioides difficile","Clostridioides spp.","Corynebacterium spp.","Enterobacter cloacae","Enterobacter spp.","Entertococcus faecalis","Enterococcus faecium","Enterococcus spp.","Escherichia coli","Haemophilus influnzae","Klebsiella pneumoniae","Legionalla penumophila","Listeria monocytogenes","Micrococcus spp.","Morganella spp.","Mycoplasma pneumoniae","Neisseria gonorrhoeae","Neisseria meningitidis","Prevotella spp","Proteus spp.","Providencia spp.","Pseudomonas aeruginosa","Pseudomonas spp.","Raoultella spp.","Serratia marcescens","Staphylococcus aureus","Staphylococcus capitis","Staphylococcus caprae","Staphylococcus epidermidis","Staphylococcus gallinarum","Staphylococcus haemolyticus","Staphylococcus hominis","Staphylococcus intermedius","Staphylococcus lugdunensis","Staphylococcus sapophyticus","Staphylococcus warneri","Stenotrophomonas maltophilia","Streptococcus agalactiae","Streptococcus anginosus","Streptococcus constellatus","Streptococcus gallolyticus","Streptococcus dysgalactiae","Streptococcus infantarius","Streptococcus sanguinis","Streptococcus suis","Streptococcus mitis","Streptococcus pneumoniae","Streptococcus mutans","Vibrio spp.","Candida albicans","Candida parapsilosis","Candida tropicalis","Candida galbrata","Candida krusei","Candida","Aspergillus fumigatus","Aspergillus niger","Altro")
+levels(data$li_mdro.factor)=c("CARBA-R (non carbapenemasi, Enterobacterales)","DTR (P.aeruginosa e A.baumannii)","ESBL","IMP","KPC","MRSA","Vancomicina R (non S.aureus)","Linezolid R","NDM","OXA-48","VIM","VRE","Altro")
+levels(data$li_cultures.factor)=c("Tampone di ferita","Campionamento profondo in CO","Altro")
+levels(data$li_atb_1.factor)=c("Amikacin","Amoxicillin","Ampicillin","Amoxicillin-clav","Ampicillin-sulb","Azithromycin","Aztreonam","Cefazolin","Cefepime","Cefiderocol","Cefitaxime","Ceftaroline","Ceftazidime","Ceftazidime-avibactam","Ceftobiprole","Ceftolozane-tazobactam","Ceftriaxone","Ciprofloxacin","Clarithromycin","Clindamycin","Colistin","Daptomycin","Dalbavacin","Doxycycline","Ertapenem","Fosomycin","Gentamicin","Imipenem","Imipenem-relebactam","Levofloxacin","Linezolid","Meropenem","Meropenem-vaborbactam","Nitrofurantoin","Oxaciliina","Piperacillin-tazobactam","Rifampin","Tigecyline","Tobramycin","Trimethroprim-Sulfamethoxazole","Vancomycin","Fluconazolo","Voriconazolo","Caspofungin","Amfotericin B","Altro")
+levels(data$li_atb_2.factor)=c("Amikacin","Amoxicillin","Ampicillin","Amoxicillin-clav","Ampicillin-sulb","Azithromycin","Aztreonam","Cefazolin","Cefepime","Cefiderocol","Cefitaxime","Ceftaroline","Ceftazidime","Ceftazidime-avibactam","Ceftobiprole","Ceftolozane-tazobactam","Ceftriaxone","Ciprofloxacin","Clarithromycin","Clindamycin","Colistin","Daptomycin","Dalbavacin","Doxycycline","Ertapenem","Fosomycin","Gentamicin","Imipenem","Imipenem-relebactam","Levofloxacin","Linezolid","Meropenem","Meropenem-vaborbactam","Nitrofurantoin","Oxaciliina","Piperacillin-tazobactam","Rifampin","Tigecyline","Tobramycin","Trimethroprim-Sulfamethoxazole","Vancomycin","Fluconazolo","Voriconazolo","Caspofungin","Amfotericin B","Altro")
+levels(data$li_atb_3.factor)=c("Amikacin","Amoxicillin","Ampicillin","Amoxicillin-clav","Ampicillin-sulb","Azithromycin","Aztreonam","Cefazolin","Cefepime","Cefiderocol","Cefitaxime","Ceftaroline","Ceftazidime","Ceftazidime-avibactam","Ceftobiprole","Ceftolozane-tazobactam","Ceftriaxone","Ciprofloxacin","Clarithromycin","Clindamycin","Colistin","Daptomycin","Dalbavacin","Doxycycline","Ertapenem","Fosomycin","Gentamicin","Imipenem","Imipenem-relebactam","Levofloxacin","Linezolid","Meropenem","Meropenem-vaborbactam","Nitrofurantoin","Oxaciliina","Piperacillin-tazobactam","Rifampin","Tigecyline","Tobramycin","Trimethroprim-Sulfamethoxazole","Vancomycin","Fluconazolo","Voriconazolo","Caspofungin","Amfotericin B","Altro")
+levels(data$li_atb_4.factor)=c("Amikacin","Amoxicillin","Ampicillin","Amoxicillin-clav","Ampicillin-sulb","Azithromycin","Aztreonam","Cefazolin","Cefepime","Cefiderocol","Cefitaxime","Ceftaroline","Ceftazidime","Ceftazidime-avibactam","Ceftobiprole","Ceftolozane-tazobactam","Ceftriaxone","Ciprofloxacin","Clarithromycin","Clindamycin","Colistin","Daptomycin","Dalbavacin","Doxycycline","Ertapenem","Fosomycin","Gentamicin","Imipenem","Imipenem-relebactam","Levofloxacin","Linezolid","Meropenem","Meropenem-vaborbactam","Nitrofurantoin","Oxaciliina","Piperacillin-tazobactam","Rifampin","Tigecyline","Tobramycin","Trimethroprim-Sulfamethoxazole","Vancomycin","Fluconazolo","Voriconazolo","Caspofungin","Amfotericin B","Altro")
+levels(data$infezioni_lvad_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$htx_urgent.factor)=c("Yes","No")
+levels(data$htx_urgent_reason.factor)=c("Infezione","Disfunzione LVAD","Altro")
+levels(data$htx_induction.factor)=c("Timoglobuline","Steroide","Ciclosporina","Tacrolimus","Altro")
+levels(data$immunotherapy___1.factor)=c("Unchecked","Checked")
+levels(data$immunotherapy___2.factor)=c("Unchecked","Checked")
+levels(data$immunotherapy___3.factor)=c("Unchecked","Checked")
+levels(data$immunotherapy___4.factor)=c("Unchecked","Checked")
+levels(data$immunotherapy___5.factor)=c("Unchecked","Checked")
+levels(data$immunotherapy___6.factor)=c("Unchecked","Checked")
+levels(data$immunotherapy___7.factor)=c("Unchecked","Checked")
+levels(data$immunotherapy___8.factor)=c("Unchecked","Checked")
+levels(data$cmv_recipient.factor)=c("Negativa    (-)","Positiva     (+)")
+levels(data$cmv_donor.factor)=c("Negativa    (-)","Positiva     (+)")
+levels(data$transplant_information_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$ht_infection_site.factor)=c("Batteriemia primaria (pBSI)","Batteriemia secondaria (sBSI)","Infezioni del tratto gastro enterico","Infezione intra-addominale","Infezione di sito chirurgico","Infezione SNC","Infezioni genitali","Osteomielite, infezione di protesi articolare","Polmonite","Infezione delle vie urinarie","Altro")
+levels(data$ht_sbsi.factor)=c("Catetere vascolare (CLABSI)","L-VAD related infection","Infezione cute e tessuti molli (non L-VAD relata)","Tratto gastro enterico","Intra-addominale","Sito chirurgico","SNC","Genitali","Osteomielite, infezione di protesi articolare","Polmonite","Infezione delle vie urinarie","Altro")
+levels(data$ht_sofa.factor)=c("Yes","No")
+levels(data$ht_microorganism.factor)=c("Achromobacter xyloxidans","Acinetobacter baumannii complex","Aerococcus spp","Aeromonas spp.","Bacteroides spp.","Brucella spp.","Burkholderia cepacia complex","Chlamydia penumoniae","Citrobacter spp","Clostridioides difficile","Clostridioides spp.","Corynebacterium spp.","Enterobacter cloacae","Enterobacter spp.","Entertococcus faecalis","Enterococcus faecium","Enterococcus spp.","Escherichia coli","Haemophilus influnzae","Klebsiella pneumoniae","Legionalla penumophila","Listeria monocytogenes","Micrococcus spp.","Morganella spp.","Mycoplasma pneumoniae","Neisseria gonorrhoeae","Neisseria meningitidis","Prevotella spp","Proteus spp.","Providencia spp.","Pseudomonas aeruginosa","Pseudomonas spp.","Raoultella spp.","Serratia marcescens","Staphylococcus aureus","Staphylococcus capitis","Staphylococcus caprae","Staphylococcus epidermidis","Staphylococcus gallinarum","Staphylococcus haemolyticus","Staphylococcus hominis","Staphylococcus intermedius","Staphylococcus lugdunensis","Staphylococcus sapophyticus","Staphylococcus warneri","Stenotrophomonas maltophilia","Streptococcus agalactiae","Streptococcus anginosus","Streptococcus constellatus","Streptococcus gallolyticus","Streptococcus dysgalactiae","Streptococcus infantarius","Streptococcus sanguinis","Streptococcus suis","Streptococcus mitis","Streptococcus pneumoniae","Streptococcus mutans","Vibrio spp.","Candida albicans","Candida parapsilosis","Candida tropicalis","Candida galbrata","Candida krusei","Candida","Aspergillus fumigatus","Aspergillus niger","Altro")
+levels(data$ht_mdro.factor)=c("CARBA-R (non carbapenemasi, Enterobacterales)","DTR (P.aeruginosa e A.baumannii)","ESBL","IMP","KPC","MRSA","MRSE","Vancomicina R (non S.aureus)","Linezolid R","NDM","OXA-48","VIM","VRE","Altro")
+levels(data$ht_cultures.factor)=c("Tampone di ferita","Campionamento profondo in CO","Urinocoltura","Coprocoltura","Emocoltura","Emocoltura catetere venoso centrale (CVC)","Emocoltura catetere arterioso","Broncolavaggio alveolare (BAL)","Broncoaspirato","Aspirato Endotracheale","Altro")
+levels(data$ht_atb_1.factor)=c("Amikacin","Amoxicillin","Ampicillin","Amoxicillin-clav","Ampicillin-sulb","Azithromycin","Aztreonam","Cefazolin","Cefepime","Cefiderocol","Cefitaxime","Ceftaroline","Ceftazidime","Ceftazidime-avibactam","Ceftobiprole","Ceftolozane-tazobactam","Ceftriaxone","Ciprofloxacin","Clarithromycin","Clindamycin","Colistin","Daptomycin","Dalbavacin","Doxycycline","Ertapenem","Fosomycin","Gentamicin","Imipenem","Imipenem-relebactam","Levofloxacin","Linezolid","Meropenem","Meropenem-vaborbactam","Nitrofurantoin","Oxaciliina","Piperacillin-tazobactam","Rifampin","Tigecyline","Tobramycin","Trimethroprim-Sulfamethoxazole","Vancomycin","Fluconazolo","Voriconazolo","Caspofungin","Amfotericin B","Altro")
+levels(data$ht_atb_2.factor)=c("Amikacin","Amoxicillin","Ampicillin","Amoxicillin-clav","Ampicillin-sulb","Azithromycin","Aztreonam","Cefazolin","Cefepime","Cefiderocol","Cefitaxime","Ceftaroline","Ceftazidime","Ceftazidime-avibactam","Ceftobiprole","Ceftolozane-tazobactam","Ceftriaxone","Ciprofloxacin","Clarithromycin","Clindamycin","Colistin","Daptomycin","Dalbavacin","Doxycycline","Ertapenem","Fosomycin","Gentamicin","Imipenem","Imipenem-relebactam","Levofloxacin","Linezolid","Meropenem","Meropenem-vaborbactam","Nitrofurantoin","Oxaciliina","Piperacillin-tazobactam","Rifampin","Tigecyline","Tobramycin","Trimethroprim-Sulfamethoxazole","Vancomycin","Fluconazolo","Voriconazolo","Caspofungin","Amfotericin B","Altro")
+levels(data$ht_atb_3.factor)=c("Amikacin","Amoxicillin","Ampicillin","Amoxicillin-clav","Ampicillin-sulb","Azithromycin","Aztreonam","Cefazolin","Cefepime","Cefiderocol","Cefitaxime","Ceftaroline","Ceftazidime","Ceftazidime-avibactam","Ceftobiprole","Ceftolozane-tazobactam","Ceftriaxone","Ciprofloxacin","Clarithromycin","Clindamycin","Colistin","Daptomycin","Dalbavacin","Doxycycline","Ertapenem","Fosomycin","Gentamicin","Imipenem","Imipenem-relebactam","Levofloxacin","Linezolid","Meropenem","Meropenem-vaborbactam","Nitrofurantoin","Oxaciliina","Piperacillin-tazobactam","Rifampin","Tigecyline","Tobramycin","Trimethroprim-Sulfamethoxazole","Vancomycin","Fluconazolo","Voriconazolo","Caspofungin","Amfotericin B","Altro")
+levels(data$ht_cmv_reactivation.factor)=c("Yes","No")
+levels(data$ht_cmv_therapy.factor)=c("Ganciclovir","Valganciclovir","Foscarnet","Cidofovir","Maribavir")
+levels(data$ht_acute_rejection.factor)=c("Yes","No")
+levels(data$ht_ar_therapy___1.factor)=c("Unchecked","Checked")
+levels(data$ht_ar_therapy___2.factor)=c("Unchecked","Checked")
+levels(data$ht_ar_therapy___3.factor)=c("Unchecked","Checked")
+levels(data$ht_ar_therapy___4.factor)=c("Unchecked","Checked")
+levels(data$infezioni_htx_complete.factor)=c("Incomplete","Unverified","Complete")
+levels(data$status.factor)=c("Vivo","Deceduto")
+levels(data$survival_data_complete.factor)=c("Incomplete","Unverified","Complete")
+
+
+```
+
+```{r Data_manipulation}
+
+############################
+#### CONVERSION TO DATE ####
+###########################
+
+convert_to_date <- function(x) as.Date(x)
+
+data <- data %>% 
+  mutate(across(c(dob,lvad_date,lvad_redo_date,rhcdate,echo_date,intrp_start,mcs_start,icu_discharge,intrp_stop,mcs_stop,h_admission,h_discharge,data_scompenso_vd,data_fu_vad_trombosi,data_fu_stroke,date_fu_emorragia_cereb,data_fu_aritmia_maggiore,data_gi_bleeding_fu,data_altri_interventi_fu,data_nit,li_event_date,li_atb_1_start,li_atb_1_end,li_atb_2_start,li_atb_2_end,li_atb_3_start,li_atb_3_end,li_atb_4_start,li_atb_4_end,htx_date,admission_date,discharge_date,ht_event_date,ht_atb_1_start,ht_atb_1_end,ht_atb_2_start,ht_atb_2_end,ht_atb_3_start,ht_atb_3_end,ht_cmv_date,ht_cmv_therapy_start,ht_cmv_therapy_end,ht_ar_therapy_date,lastfup,death_date), convert_to_date)) %>%
+  
+#####################################################
+#### FILLING UP DATE NAs FOR SUBSEQUENT ANALYSIS #### 
+#####################################################
+
+group_by(study_id) %>%
+  mutate(
+    lvad_date  = first(na.omit(lvad_date)),
+    data_nit   = first(na.omit(data_nit)),
+    htx_date   = first(na.omit(htx_date)),
+    lastfup    = first(na.omit(lastfup)),
+    death_date = first(na.omit(death_date)),
+    status = first(na.omit(status)),
+    ) %>%
+ungroup() %>% 
+  
+################################
+##### RELEVANT TIME FRAMES###### 
+###############################
+
+  mutate(
+    hlosdays = as.numeric (h_discharge - h_admission),
+    li.infection.onset =   as.numeric(li_event_date - lvad_date),
+    ht.infection.onset =   as.numeric(ht_event_date - lvad_date),
+    lvadtohtx = as.numeric(htx_date - lvad_date),
+    fup.time = as.numeric(lastfup - lvad_date),
+    lvadtohtxmonths = round(as.numeric(htx_date - lvad_date)/30.4375,0),
+    lvad.time = case_when(    #months
+      is.na(htx_date) ~ round(as.numeric(lastfup - lvad_date)/30.4375,1),
+      !is.na(htx_date) ~ round(as.numeric(htx_date - lvad_date)/30.4375,1))
+    )
+
+# hlosdays --> hospital Lenght of Stay
+# li.infection.onset --> time to infection during LVAD support (from LVAD implantation)
+# ht.infection.onset --> time to infection after heart transplant (from LVAD implantation)
+# lvadtohtxmonths --> months between LVAD implantation and heart transplant
+# lvad.time (months) --> lvad support period (either until htx or last follow up)
+
+##########################
+#### LIST OF PATIENTS ####
+##########################
+ptlist <- data %>% 
+  select(study_id) %>% 
+  unique()
+
+htxlist <- data %>%
+  filter(!is.na(htx_date)) %>% 
+  select(study_id) %>%  
+  unique()
+
+# ptlist --> list of all patients
+# htxlist --> list of transplanted patients
+
+
+```
+
+```{r Classification_functions}
+
+#################################
+#### Gram + , Gram -, Fungus #### 
+#################################
+
+micro_groups <- function(x) {
+  case_when(
+    is.na(x) ~ NA_character_,
+    
+    x %in% c(
+  "Aerococcus spp", "Chlamydia penumoniae",
+  "Clostridioides difficile", "Clostridioides spp.",
+  "Corynebacterium spp.", "Entertococcus faecalis",
+  "Enterococcus faecium", "Enterococcus spp.",
+  "Listeria monocytogenes", "Micrococcus spp.",
+  "Staphylococcus aureus", "Staphylococcus capitis",
+  "Staphylococcus caprae", "Staphylococcus epidermidis",
+  "Staphylococcus gallinarum","Staphylococcus haemolyticus",
+  "Staphylococcus hominis", "Staphylococcus intermedius",
+  "Staphylococcus lugdunensis", "Staphylococcus sapophyticus",
+  "Staphylococcus warneri","Streptococcus agalactiae",
+  "Streptococcus anginosus", "Streptococcus constellatus",
+  "Streptococcus gallolyticus", "Streptococcus dysgalactiae",
+  "Streptococcus infantarius","Streptococcus sanguinis",
+  "Streptococcus suis", "Streptococcus mitis", 
+  "Streptococcus pneumoniae", "Streptococcus mutans"
+  ) ~ "GramPositive",
+  
+x %in% c(
+  "Achromobacter xyloxidans", "Acinetobacter baumannii complex",
+  "Aeromonas spp.","Bacteroides spp.", "Brucella spp.",
+  "Burkholderia cepacia complex", "Citrobacter spp",
+  "Enterobacter cloacae", "Enterobacter spp.", "Escherichia coli",
+  "Haemophilus influnzae","Klebsiella pneumoniae",
+  "Legionalla penumophila", "Morganella spp.", "Mycoplasma pneumoniae",
+  "Neisseria gonorrhoeae", "Neisseria meningitidis",
+  "Prevotella spp", "Proteus spp.","Providencia spp.",
+  "Pseudomonas aeruginosa", "Pseudomonas spp.", "Raoultella spp.",
+  "Serratia marcescens", "Stenotrophomonas maltophilia", "Vibrio spp."
+) ~ "GramNegative",
+
+x %in% c(
+  "Candida albicans", "Candida parapsilosis",
+  "Candida tropicalis", "Candida galbrata",
+  "Candida krusei", "Candida", "Aspergillus fumigatus",
+  "Aspergillus niger"
+  ) ~ "Fungus",
+
+  TRUE ~ "Unknown"
+)
+}
+
+###############################
+#### MICRORGANISM FAMILIES #### 
+###############################
+
+micro_family <- function(x) {
+  case_when(
+    is.na(x) ~ NA_character_,
+    x == "Acinetobacter baumannii complex" ~ "Acinetobacter",
+    x %in% c("Aspergillus fumigatus", "Aspergillus niger") ~ "Aspergillus",
+    x == "Brucella spp." ~ "Brucella",
+    x %in% c("Candida albicans", "Candida parapsilosis", "Candida tropicalis", 
+                 "Candida galbrata", "Candida krusei", "Candida") ~ "Candida",
+    x == "Chlamydia penumoniae" ~ "Chlamydia",
+    x %in% c("Clostridioides difficile",
+                 "Clostridioides spp.") ~ "Clostridioides",
+    x == "Corynebacterium spp." ~ "Corynebacterium",
+    x %in% c("Citrobacter spp", "Enterobacter cloacae", "Enterobacter spp.",
+                 "Escherichia coli", "Klebsiella pneumoniae", "Morganella spp.",
+                 "Proteus spp.", "Providencia spp.","Raoultella spp.",
+                 "Serratia marcescens") ~ "Enterobacteriaceae",
+    x %in% c("Entertococcus faecalis", "Enterococcus faecium",
+                 "Enterococcus spp.") ~ "Enterococcus",
+    x == "Haemophilus influnzae" ~ "Haemophilus",
+    x == "Legionalla penumophila" ~ "Legionella",
+    x == "Listeria monocytogenes" ~ "Listeria",
+    x == "Mycoplasma pneumoniae" ~ "Mycoplasma",
+    x %in% c("Neisseria gonorrhoeae", "Neisseria meningitidis") ~ "Neisseria",
+    x %in% c("Achromobacter xyloxidans", "Aerococcus spp",
+                 "Aeromonas spp.", "Bacteroides spp.",
+                 "Burkholderia cepacia complex", "Micrococcus spp.",
+                 "Prevotella spp", "Vibrio spp.", "Altro") ~ "Altro",
+    x %in% c("Pseudomonas aeruginosa", "Pseudomonas spp.") ~ "Pseudomonas",
+    x == "Staphylococcus aureus" ~ "St. aureus",
+    x %in% c("Staphylococcus capitis", "Staphylococcus caprae",
+                 "Staphylococcus gallinarum","Staphylococcus haemolyticus",
+                 "Staphylococcus hominis", "Staphylococcus intermedius",
+                 "Staphylococcus lugdunensis", "Staphylococcus sapophyticus",
+                 "Staphylococcus warneri") ~ "St. coagulase neg",
+    x == "Staphylococcus epidermidis" ~ "St. epidermidis",
+    x == "Stenotrophomonas maltophilia" ~ "Stenotrophomonas",
+    x %in% c("Streptococcus agalactiae", "Streptococcus anginosus",
+                 "Streptococcus constellatus","Streptococcus gallolyticus",
+                 "Streptococcus dysgalactiae", "Streptococcus infantarius",
+                 "Streptococcus sanguinis", "Streptococcus suis",
+                 "Streptococcus mitis","Streptococcus pneumoniae",
+                 "Streptococcus mutans") ~ "Streptococcus",
+  )
+}
+
+#####################
+#### Antibiotics #### 
+#####################
+
+classify_atb <- function(x) {
+  case_when(
+    is.na(x) ~ NA_character_,
+    x %in% c("Amikacin", "Gentamicin", "Tobramycin") ~ "Aminoglycosides",
+    x %in% c("Amoxicillin-clav", "Ampicillin-sulb",
+               "Piperacillin-tazobactam") ~ "Anti-anaerobic betalactam",
+    x %in% c("Amoxicillin", "Ampicillin", "Oxaciliina",
+               "Aztreonam") ~ "Non anti-anaerobic betalactam",
+    x %in% c("Meropenem", "Ertapenem", "Imipenem",
+               "Meropenem-vaborbactam", "Imipenem-relebactam") ~ "Carbapenems",
+    x %in% c("Cefazolin", "Cefepime", "Ceftriaxone", "Cefiderocol",
+               "Cefitaxime", "Ceftazidime", "Ceftazidime-avibactam",
+               "Ceftolozane-tazobactam", "Ceftaroline") ~ "Cephalosporin",
+    x == "Ceftobiprole" ~ "Anti-MRSA cephalosporin",
+    x %in% c("Ciprofloxacin", "Levofloxacin") ~ "Quinolones",
+    x %in% c("Azithromycin", "Clarithromycin") ~ "Macrolide",
+    x == "Linezolid" ~ "Linezolid",
+    x == "Doxycycline" ~ "Doxycycline",
+    x == "Vancomycin" ~ "Glycopeptides",
+    x == "Daptomycin" ~ "Daptomycin",
+    x == "Trimethroprim-Sulfamethoxazole" ~ "Trimethoprim-Sulfamethoxazole",
+    x %in% c("Fluconazolo", "Voriconazolo", "Caspofungin",
+               "Amfotericin B") ~ "Antifungals",
+    x %in% c("Clindamycin", "Colistin", "Dalbavacin",
+               "Fosomycin", "Nitrofurantoin", "Rifampin",
+               "Tigecyline", "Altro") ~ "Other"
+  )
+}
+
+```
+
+```{r lvad.specific.infection.factor}
+
+lvad.specific.infection.free.data <- data %>%
+  filter(is.na(li_event_date) | li_event_date > lvad_date) %>%
+  #this approach is not the best one... however it works for this dataset, so I'll keep it...
+  
+  mutate(
+    
+    lvad.specific.infection.free.time = case_when(
+      
+      li_infection_site.factor == "L-VAD specific infection" |
+      li_sbsi.factor == "L-VAD specific infection"
+      ~ as.numeric(li_event_date - lvad_date)/30.4375,
+      
+      is.na(htx_date)
+      ~ as.numeric(lastfup - lvad_date)/30.4375,
+      
+      !is.na(htx_date)
+      ~ as.numeric(htx_date - lvad_date)/30.4375),
+      
+    lvad.specific.infection_event = case_when(
+      li_infection_site.factor == "L-VAD specific infection" | 
+      li_sbsi.factor == "L-VAD specific infection" ~ 1,
+      TRUE ~ 0)
+    )%>%
+      group_by(study_id) %>%
+      slice_max(lvad.specific.infection_event, with_ties = FALSE) 
+
+#################### COVARIATE ####################
+###########  LVAD-Specific Infection  #############
+###################################################
+
+lvad.specific.infection.cov <- lvad.specific.infection.free.data %>% 
+select(study_id,lvad.specific.infection_event) %>% 
+  mutate(
+  lvad.specific.infection_event.factor = factor(
+  ifelse(lvad.specific.infection_event == 1, "Yes", "No"),
+  levels = c("No", "Yes")))
+
+############# COVARIATE #############
+###########  LVAD Era  ##############
+#####################################
+
+lvad.era <- data %>% 
+  select(study_id, lvad_date) %>%
+  unique() %>% 
+  mutate(
+    lvad.era = case_when(
+      lvad_date >= ymd("2008-01-01") & lvad_date <= ymd("2019-12-31") ~ "2008–2019",
+      lvad_date >= ymd("2020-01-01") & lvad_date <= ymd("2024-12-31") ~ "2020–2024"
+    ),
+    lvad.era = factor(lvad.era, levels = c("2008–2019", "2020–2024"))
+  ) %>% 
+  select(-lvad_date)
+
+```
+
+# INTRODUCTION
+
+Left ventricular assist devices (LVADs) have become an essential therapy for patients with advanced heart failure, providing support options such as bridge-to-transplant (BTT) and destination therapy (DT)[@Niamat2024; @Aslam2024; @Karnatak2023]. Despite significant technological advances in LVADs, infectious complications remain a major cause of morbidity and mortality, affecting patient survival, hospitalization rates, and long-term outcomes.[@Niamat2024]
+
+## AIMS OF THE STUDY
+
+#### Primary objective
+
+-   Determine the incidence of post-implantation LVAD infections.
+
+#### Secondary objectives
+
+-   Calculate the incidence of post-LVAD infections by stratifying by time to infection and type of infection
+-   Describe the pathogens responsible for the infections found and determine antibiotic consumption, expressed in terms of days of antibiotic therapy (DOT - Days of Therapy)
+
+## METHODS
+
+We conducted a single-center retrospective study including all adult patients (≥18 years) who consecutively underwent left ventricular assist device (LVAD) implantation between January 1, 2010, and December 31, 2024, at \[...\]. Demographic and anthropometric data, comorbidities, information on infections occurring during hospitalization and subsequent follow-up, and long-term survival outcomes were collected through review of electronic medical records. Data collection was completed on April 30, 2025.
+
+## STATISICAL ANALYSIS
+
+Because patients on LVAD support may experience multiple infections during follow-up, we calculated incidence rates that incorporate recurrent events. This method, which relates the total number of infections to the accumulated person-time at risk, provides a comprehensive estimate of the overall infection burden and captures the cumulative impact of repeated events on long-term support.[@Glynn1996]
+
+At the same time, we examined time to first infection after LVAD implantation, accounting for death and transplantation as competing events. Using this framework, cause-specific cumulative incidence functions were calculated over the entire follow-up with the Aalen–Johansen estimator, for different categories of infection (overall, LVAD-specific, non-LVAD-specific, and sepsis) to characterize incidence patterns for each type.
+
+These complementary approaches describe both the overall burden of infections and the probability of experiencing a first infection under the competing risks of death or transplantation.
+
+# RESULTS
+
+## PATIENT DEMOGRAPHICS
+
+The cohort was predominantly male (90%), with a median age of 55 years (IQR: 49.5–61) and a mean BMI of 25.4 (IQR: 22.6–28.3). Most patients presented with INTERMACS profiles 4 (39%) or 3 (24%), and indications were primarily bridge to transplant (47%), bridge to candidacy (32%), or destination therapy (20%). Devices implanted were HeartMate 3 in 39%, HeartMate II in 30%, and HVAD in 28% of patients. The majority of LVADs (80%) were implanted between 2008 and 2019. Ischemic heart disease (56%) and dilated cardiomyopathy (39%) were the predominant heart failure etiologies. Comorbidities were common: hypertension (26%), diabetes (23%), dyslipidemia (35%), renal failure (32%), with 49% reporting a history of smoking and 60% having coronary artery disease (@tbl-table_one).
+
+```{r table_one}
+#| label: tbl-table_one
+#| tbl-cap: "Clinical Features at LVAD implantation"
+
+tab1vars <- data %>% 
+  filter(is.na(redcap_repeat_instance)) %>%
+  select(study_id,
+         age,sex.factor,bmi,intermacs.factor,lvad_mod.factor,lvad_ind.factor,
+         cmp_aethiology.factor,hyper.factor,dyslip.factor,diabetes.factor,
+         renal_insuff.factor,smoke.factor,coronary_dis.factor,
+         infarction.factor,arrhyt.factor,valve_rep.factor,pm.factor,
+         surgery.factor) %>%  #,creatinina,drugs.factor
+  mutate(across(where(is.factor), droplevels))
+ 
+tab1vars <- tab1vars %>%
+  left_join(select(lvad.specific.infection.cov, #in left join, you can specify the object and the variables taken from the object
+                   study_id,                        
+                   lvad.specific.infection_event.factor), by = "study_id") %>%
+  left_join(select(lvad.era,
+                   study_id,
+                   lvad.era), by = "study_id") %>%
+  select(-study_id)
+
+# Defining continuous and categorical variables
+#tab1vars.cat <- tab1vars %>% 
+#  select(ends_with(".factor"))
+#tab1vars.cont <- tab1vars %>% 
+#  select(-ends_with(".factor")) 
+
+tab1vars %>% 
+   tbl_summary(
+     by= lvad.specific.infection_event.factor, 
+     missing = "no",
+     sort = list(all_categorical()~ "frequency"),
+     statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} ({p}%)"
+      ),
+     label = list(
+        age  ~ "Age (years)",
+        sex.factor  ~ "Sex",
+        bmi  ~ "BMI",
+        intermacs.factor  ~ "INTERMACS",
+        lvad_mod.factor  ~ "LVAD Device",
+        lvad_ind.factor  ~ "Indication",
+        cmp_aethiology.factor  ~ "Cardiomyopathy aethiology",
+        hyper.factor  ~ "Hypertension",
+        dyslip.factor  ~ "Dyslipidaemia",
+        diabetes.factor ~ "Diabetes (type 1 or type 2)",
+        renal_insuff.factor ~ "Renal insufficiency",
+        smoke.factor ~ "History of smoking",
+        #drugs.factor  ~ "Alcohol or drug abuse",
+        coronary_dis.factor  ~ "Coronary artery disease",
+        infarction.factor  ~ "Previous infarction",
+        arrhyt.factor  ~ "Arrhytmia",
+        valve_rep.factor  ~ "Valve repair/replace",
+        pm.factor  ~ "Pacemeker",
+        surgery.factor ~ "Major previous surgery", 
+        lvad.era ~"LVAD implantation period" #creatinina ~ "Creatinine"
+        )
+)%>%
+  add_p(pvalue_fun = label_style_pvalue(digits = 2)) %>%
+  add_overall() %>% 
+modify_spanning_header(all_stat_cols() ~ "**LVAD Specific Infection**")
+
+   
+# type = list(
+#           names(tab1vars.cont) ~ "continuous",
+#           names(tab1vars.cat) ~ "categorical")
+
+
+```
+
+```{r}
+
+T1_LVAD <- tab1vars %>% 
+   tbl_summary(
+     by= lvad.specific.infection_event.factor, 
+     missing = "no",
+     sort = list(all_categorical()~ "frequency"),
+     statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} ({p}%)"
+      ),
+     label = list(
+        age  ~ "Age (years)",
+        sex.factor  ~ "Sex",
+        bmi  ~ "BMI",
+        intermacs.factor  ~ "INTERMACS",
+        lvad_mod.factor  ~ "LVAD Device",
+        lvad_ind.factor  ~ "Indication",
+        cmp_aethiology.factor  ~ "Cardiomyopathy aethiology",
+        hyper.factor  ~ "Hypertension",
+        dyslip.factor  ~ "Dyslipidaemia",
+        diabetes.factor ~ "Diabetes (type 1 or type 2)",
+        renal_insuff.factor ~ "Renal insufficiency",
+        smoke.factor ~ "History of smoking",
+        #drugs.factor  ~ "Alcohol or drug abuse",
+        coronary_dis.factor  ~ "Coronary artery disease",
+        infarction.factor  ~ "Previous infarction",
+        arrhyt.factor  ~ "Arrhytmia",
+        valve_rep.factor  ~ "Valve repair/replace",
+        pm.factor  ~ "Pacemeker",
+        surgery.factor ~ "Major previous surgery", 
+        lvad.era ~"LVAD implantation period" #creatinina ~ "Creatinine"
+        )
+)%>%
+  add_p(pvalue_fun = label_style_pvalue(digits = 2)) %>%
+  add_overall() %>% 
+modify_spanning_header(all_stat_cols() ~ "**LVAD Specific Infection**")
+
+ T1_LVAD <- as_gt(T1_LVAD)
+
+gtsave(T1_LVAD,"T1_LVAD.docx")  
+
+
+```
+
+```{r driveline_infection}
+#| label: tbl-driveline_infection
+#| tbl-cap: "Driveline infection - stratified by device type"
+
+lvad.models <- data %>% 
+  select(study_id,lvad_mod.factor) %>% 
+  drop_na()
+
+driveline.infections.data <- data %>%
+  group_by(study_id) %>% 
+  mutate(
+    driveline.infection = factor(case_when(
+      li_lvad_infection.factor == "Driveline" ~ 1,
+      TRUE ~ 0),levels = c(0, 1))) %>%
+  slice_max(driveline.infection, with_ties = FALSE) %>% 
+   ungroup() %>% 
+    mutate(driveline.infection = fct_recode(driveline.infection,
+                                          "No" = "0",
+                                          "Yes" = "1")) %>% 
+  select(study_id,driveline.infection) %>%
+  #select(study_id,driveline.infection,li_lvad_infection.factor,everything()) %>% 
+  left_join(lvad.models,by="study_id") %>% 
+  ungroup() %>% 
+  select(-study_id)
+  
+driveline.infections.data %>%
+   tbl_summary(
+     by= driveline.infection, 
+     missing = "no",
+     sort = list(all_categorical()~ "frequency"),
+     statistic = list(
+      all_continuous() ~ "{mean} ({sd})",
+      all_categorical() ~ "{n} ({p}%)"
+      ),
+     label = list(
+        lvad_mod.factor  ~ "LVAD Device"
+        )
+)%>%
+  add_p(pvalue_fun = label_style_pvalue(digits = 2)) %>%
+  add_overall() %>% 
+modify_spanning_header(all_stat_cols() ~ "**Driveline Infection**")
+
+
+```
+
+```{r}
+
+```
+
+{{< pagebreak >}}
+
+## POST-IMPLANT INFECTION INCIDENCE
+
+In this cohort, infections were frequent, with 61% of patients experiencing at least one infection within the first 12 months and 77% affected over the total follow-up (@tbl-infection-rates). Rates were highest for LVAD-specific infections, particularly driveline infections, which showed an increase over time, reflecting their predominance as later-onset, device-related complications. In contrast, bloodstream infections such as sepsis and bacteremia were more common during the first year but contributed proportionally less in longer-term follow-up, consistent with early postoperative and catheter-related sources. These patterns align with the natural history of infection after LVAD implantation, where nonspecific early postoperative infections give way to predominantly device-associated infections during long-term support.
+
+```{r}
+infection_site <- data %>%
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id,li_infection_site.factor) %>% 
+  drop_na(li_infection_site.factor) %>%  
+  group_by(li_infection_site.factor) %>% 
+  summarise(
+    Counts=n(),  # n() gives the current group size
+    Patients = n_distinct(study_id)
+  ) %>% 
+  mutate(
+    pt_prop = round(Patients/nrow(ptlist)*100,1),
+    prop = round(Counts/sum(Counts)*100,1),
+         ) %>%
+  select(li_infection_site.factor,Patients, pt_prop,Counts,prop) %>% 
+   mutate(sort_key = if_else(li_infection_site.factor == "Altro", Inf, -Counts)) %>%
+  arrange(sort_key) %>%
+  select(-sort_key)
+
+vsi <- data %>% 
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id, li_lvad_infection.factor) %>%
+  drop_na(li_lvad_infection.factor) %>% 
+  group_by(li_lvad_infection.factor) %>%
+  summarise(
+    Counts=n(),
+    Patients = n_distinct(study_id)
+  ) %>% 
+  mutate(
+    pt_prop = round(Patients/nrow(ptlist)*100,1),
+    prop = round(Counts/sum(Counts)*100,1),
+         ) %>%
+  select(li_lvad_infection.factor,Patients, pt_prop,Counts,prop) %>% 
+  arrange(desc(Counts))
+
+sepsi <- data %>% 
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id,li_sepsi.factor) %>% 
+  mutate(li_sepsi.factor = replace_na(li_sepsi.factor, "No")) %>%
+  group_by(li_sepsi.factor) %>% 
+  summarise(Counts=n(),
+            Patients = n_distinct(study_id)
+  ) %>%  
+  mutate(
+    pt_prop = round(Patients/nrow(ptlist)*100,1),
+    prop = round(Counts/sum(Counts)*100,1))
+
+sbsi.data <- data %>%
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id,li_sbsi.factor) %>% 
+  drop_na(li_sbsi.factor) %>%   
+  group_by(li_sbsi.factor) %>% 
+  summarise(
+    Counts=n(),
+    Patients = n_distinct(study_id)
+  ) %>% 
+  mutate(
+    pt_prop = round(Patients/nrow(ptlist)*100,1),
+    prop = round(Counts/sum(Counts)*100,1),
+         ) %>% 
+  select(li_sbsi.factor,Patients, pt_prop,Counts,prop) %>% 
+  mutate(sort_key = if_else(li_sbsi.factor == "Altro", Inf, -Counts)) %>%
+  arrange(sort_key) %>%
+  select(-sort_key)
+```
+
+```{r infection-rates}
+#| label: tbl-infection-rates
+#| tbl-cap: "Infection rates"
+
+# Data preparation
+lvad.time.data <- data %>% 
+  select(study_id,lvad.time) %>% 
+  unique() 
+
+tot.lvad.time <- sum(lvad.time.data$lvad.time) #months of observed LVAD support 
+
+infection_site.pct <- data %>%
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id,li_infection_site.factor) %>% 
+  drop_na(li_infection_site.factor) %>%  
+  group_by(study_id) %>% 
+  summarise(
+    infection.episodes = n(),  # n° of episodes for each patient
+  ) 
+
+vsi.pct <- data %>% 
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id, li_lvad_infection.factor) %>%
+  drop_na(li_lvad_infection.factor) %>% 
+  group_by(study_id) %>% 
+  summarise(
+    vsi.episodes = n(),  # n° of episodes for each patient
+  ) 
+
+driveline.pct <- data %>% 
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id, li_lvad_infection.factor) %>%
+  drop_na(li_lvad_infection.factor) %>% 
+  filter(li_lvad_infection.factor =="Driveline") %>% 
+  group_by(study_id) %>% 
+  summarise(
+    vsi.episodes = n(),  # n° of episodes for each patient
+  ) 
+
+sepsi.pct <- data %>% 
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id,li_sepsi.factor) %>% 
+  mutate(li_sepsi.factor = replace_na(li_sepsi.factor, "No")) %>%
+  filter(li_sepsi.factor == "Yes") %>% 
+  group_by(study_id) %>% 
+  summarise(
+    sepsi.episodes = n(),  # n° of episodes for each patient
+  ) 
+
+bacteremia.data <- data %>% 
+  filter(li_event_date > lvad_date) %>% 
+  select(study_id,li_infection_site.factor,li.infection.onset) %>% 
+  drop_na(li_infection_site.factor) %>%  
+  filter(li_infection_site.factor == "Batteriemia primaria (pBSI)" | li_infection_site.factor == "Batteriemia secondaria (sBSI)")
+
+
+#Overall infection rate
+overall.infection.rate <- round((sum(infection_site$Counts)*100 /tot.lvad.time),2)
+overall.infection.pct <-  paste0(round((nrow(infection_site.pct)/nrow(ptlist)) * 100,1), "%")
+#infection_site$Counts --> total n° of occurred infection
+
+vsi.infection.rate <- round((sum(vsi$Counts)*100/tot.lvad.time),2)
+vsi.infection.pct <-  paste0(round((nrow(vsi.pct)/nrow(ptlist)) * 100, 1), "%")
+#vsi$Counts --> total n° of LVAD-specific infections
+
+driveline.infection.rate <- round((vsi[1,4]*100/tot.lvad.time),2)
+driveline.infection.pct <-  paste0(round((nrow(driveline.pct)/nrow(ptlist)) * 100, 1), "%")
+#vsi[1,4] --> total n° of driveline infections
+
+sepsis.infection.rate <- round((sepsi[1,2]*100/tot.lvad.time),2)
+sepsis.infection.pct <-  paste0(round((nrow(sepsi.pct)/nrow(ptlist)) * 100, 1), "%")
+#sepsi[1,2] --> total n° of sepsis
+
+bacteremia.rate <- round(nrow(bacteremia.data)*100 /tot.lvad.time,2)
+bacteremia.pct <- bacteremia.data %>% 
+  select(study_id) %>% 
+  unique()  
+bacteremia.pct <-  paste0(round((nrow(bacteremia.pct)/nrow(ptlist)) * 100,1), "%")
+
+
+rate.table <- rbind(overall.infection.rate,vsi.infection.rate,driveline.infection.rate,bacteremia.rate,sepsis.infection.rate)
+colnames(rate.table) <- "Rate"
+
+pct.table <- rbind(overall.infection.pct,vsi.infection.pct,driveline.infection.pct,bacteremia.pct,sepsis.infection.pct)
+colnames(pct.table) <- "Pct"
+
+#Infection rates (First 12 months post implant)
+infection_site12 <- data %>%
+  filter(li_event_date > lvad_date) %>%
+  filter(li.infection.onset<366) %>% 
+  select(study_id,li_infection_site.factor) %>% 
+  drop_na(li_infection_site.factor)
+#Proportion of patients
+infection_site12.pct <- infection_site12 %>%
+  select(study_id) %>%
+  unique()
+#Counting n° of events
+infection_site12 <- infection_site12%>%
+  group_by(li_infection_site.factor) %>% 
+  summarise(Counts=n())
+
+vsi12 <- data %>% 
+  filter(li_event_date > lvad_date) %>%
+  filter(li.infection.onset<366) %>% 
+  select(study_id, li_lvad_infection.factor) %>%
+  drop_na(li_lvad_infection.factor)
+
+vsi12.pct <- vsi12 %>%
+  select(study_id) %>%
+  unique()
+
+driveline12.pct <- vsi12 %>%
+  filter(li_lvad_infection.factor == "Driveline") %>% 
+  select(study_id) %>%
+  unique()
+
+vsi12  <- vsi12 %>%
+  group_by(li_lvad_infection.factor) %>%
+  summarise(Counts=n())
+
+sepsi12 <- data %>% 
+  filter(li_event_date > lvad_date) %>%
+  filter(li.infection.onset<366) %>% 
+  select(study_id,li_sepsi.factor) 
+
+sepsi12.pct <- sepsi12  %>%
+  filter(li_sepsi.factor == "Yes") %>% 
+  select(study_id) %>%
+  unique()
+
+sepsi12 <- sepsi12 %>% 
+  mutate(li_sepsi.factor = replace_na(li_sepsi.factor, "No")) %>%
+  group_by(li_sepsi.factor) %>% 
+  summarise(Counts=n())
+
+# Total time (cut at 12 months)
+tot.lvad.time12 <- lvad.time.data %>% 
+    mutate(lvad.time = ifelse(lvad.time > 12, 12, lvad.time))
+
+tot.lvad.time12 <- sum(tot.lvad.time12$lvad.time)
+
+#Rates (first 12 months)
+overall.infection.rate12 <- round((sum(infection_site12$Counts)*100 /tot.lvad.time12),2)
+vsi.infection.rate12 <- round((sum(vsi12$Counts)*100/tot.lvad.time12),2)
+driveline.infection.rate12 <- round((vsi12[1,2]*100/tot.lvad.time12),2)
+sepsis.infection.rate12 <- round((sepsi12[1,2]*100/tot.lvad.time12),2)
+
+bacteremia.data12 <- bacteremia.data %>% 
+  filter(li.infection.onset <366)
+bacteremia.rate12 <- round(nrow(bacteremia.data12)*100 /tot.lvad.time,2)
+
+#% of patients with infection episodes (first 12 months)
+overall.infection.pct12 <- paste0(round((nrow(infection_site12.pct)/nrow(ptlist)) * 100,1), "%")
+vsi.infection.pct12 <-  paste0(round((nrow(vsi12.pct)/nrow(ptlist)) * 100, 1), "%")
+driveline.infection.pct12 <-  paste0(round((nrow(driveline12.pct)/nrow(ptlist)) * 100, 1), "%")
+sepsis.infection.pct12 <-  paste0(round((nrow(sepsi12.pct)/nrow(ptlist)) * 100, 1), "%")
+
+bacteremia.pct12 <- bacteremia.data12 %>% 
+  select(study_id) %>% 
+  unique() 
+bacteremia.pct12 <-  paste0(round((nrow(bacteremia.pct12)/nrow(ptlist)) * 100,1), "%")
+
+
+
+rate.table12 <- rbind(overall.infection.rate12,vsi.infection.rate12,driveline.infection.rate12,bacteremia.rate12,sepsis.infection.rate12)
+colnames(rate.table12) <- "Rate12"
+
+pct.table12 <- rbind(overall.infection.pct12,vsi.infection.pct12,driveline.infection.pct12,bacteremia.pct12,sepsis.infection.pct12)
+colnames(pct.table12) <- "Pct12"
+
+rate.table.all <- data.frame(
+  Type = c("All infections", "LVAD-Specific", "Driveline","Bacteremia","Sepsis"),
+  rate.table12,
+  pct.table12,
+  rate.table,
+  pct.table
+  )
+
+rate.table.all %>% 
+  flextable() %>% 
+   set_header_labels(
+    Type = "Type",
+    Rate = "Rate*",
+    Pct = "Risk",
+    Rate12 = "Rate*",
+    Pct12 = "Risk"
+  ) %>% 
+  add_header_row(
+    values = c("", "First 12 months", "Overall"),  
+    colwidths = c(1, 2, 2)
+    ) %>% 
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header") %>% 
+   add_footer_row(
+    values = "* per 100 person-months",  
+    colwidths = 5                   
+  ) %>% 
+   italic(part = "footer", italic = TRUE)
+
+```
+
+*"In general, infection within the first 3 months following implant is commonly related to sources such as central venous and urinary catheters, postoperative pneumonia, and C difficile infection and may be from the device itself as well. Later-onset infections tend to be associated with the device, most commonly driveline infections."* [@Aslam2018a]
+
+*"The most common VAD-specific infections are driveline infections with an overall event rate of 14% to 48% between various studies, and these tend to increase as a function of support duration"* [@Aslam2018a]
+
+##### All infections cumulative incidence accounting for competing risks
+
+```{r incidenza_cumulativa_all.infections}
+#| label: fig-all-infections_Cumulative_Incidence
+#| fig-cap: "All infections cumulative incidence accounting for competing risks"
+
+temp0 <- data %>%
+  filter(redcap_repeat_instrument == "infezioni_lvad") %>%
+  select(study_id, li_infection_site.factor,li_sbsi.factor,
+         li_lvad_infection.factor,li.infection.onset) %>%
+  filter(li.infection.onset>-1) %>% 
+  drop_na(li_infection_site.factor) %>% 
+  rename(etime = li.infection.onset) %>% #days
+  mutate(status=3) %>% 
+  select(study_id,etime,status)
+
+temp2 <- data %>%
+  filter(redcap_repeat_instrument == "infezioni_lvad") %>%
+  select(study_id,lvadtohtx) %>% 
+  mutate(status=ifelse(!is.na(lvadtohtx),2,NA)) %>% # Heart Transplant
+  drop_na() %>% 
+  rename(etime = lvadtohtx) #days
+
+temp3 <- data %>%
+  filter(redcap_repeat_instrument == "infezioni_lvad") %>%
+  select(study_id, fup.time, status) %>%
+  mutate(status = as.numeric(status)) %>% # Dead (1) or Alive (0)
+  rename(etime = fup.time) #days
+  
+cuminc.data0 <-  rbind(temp0,temp2,temp3) %>% 
+  group_by(study_id) %>% 
+  slice_min(etime,with_ties = F) %>% # Time to first event (VSI-HTX-Death)
+  mutate(etime = etime/30.4375)
+  
+cuminc.data0$status <- factor(cuminc.data0$status,0:3, labels=c("censor", "death", "HTX", "Infection"))
+
+cfit0 <- survfit(Surv(etime, status) ~ 1, cuminc.data0)
+  
+inf.cmprsk <- tidycmprsk::cuminc(Surv(etime, status) ~ 1, data = cuminc.data0)
+
+options("ggsurvfit.switch-color-linetype" = TRUE)
+
+z <- inf.cmprsk %>%
+  ggcuminc(outcome = c("death", "HTX", "Infection")) + 
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 42),breaks = seq(0, 42, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.85),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = ""
+  )
+
+z1 <- inf.cmprsk %>%
+  ggcuminc(outcome = c("Infection")) + 
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 42),breaks = seq(0, 42, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.85),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = "All Infection"
+  )
+
+#z
+z1
+
+
+
+```
+
+##### LVAD-specific infections cumulative incidence accounting for competing risks
+
+```{r incidenza_cumulativa_infezioni.LVAD.specifiche}
+#| label: fig-LVAD-specific_Cumulative_Incidence
+#| fig-cap: "LVAD-specific infections cumulative incidence accounting for competing risks"
+
+#Prepare data
+
+temp1 <- data %>%
+  filter(redcap_repeat_instrument == "infezioni_lvad") %>%
+  select(study_id, li_lvad_infection.factor, li.infection.onset) %>% 
+  mutate(status=ifelse(li.infection.onset>0 & !is.na(li_lvad_infection.factor),3,NA)) %>% # LVAD-Specific infection
+  drop_na() %>% 
+  rename(etime = li.infection.onset) %>%  
+  select (-li_lvad_infection.factor)
+
+cuminc.data <-  rbind(temp1,temp2,temp3) %>% 
+  group_by(study_id) %>% 
+  slice_min(etime,with_ties = F) # Time to first event (VSI-HTX-Death)
+
+cuminc.data$status <- factor(cuminc.data$status,0:3, labels=c("censor", "death", "HTX", "VSI"))
+
+cfit1 <- survfit(Surv(etime, status) ~ 1, cuminc.data)
+#Aalen–Johansen estimator
+#print(cfit1, scale=12*30.4375)
+
+# plot(cfit1, col=c(1,2,3), lty=c(1,2,3),
+#        mark.time=FALSE, lwd=2,  xscale=12*30.4375,
+#       xlab="Years post LVAD", ylab="Probability in State",
+#       main = "Specific LVAD Infection Cumulative Incidence")
+# legend(2000,.5,c("death", "HTX", "VSI"),
+#         col=c(1,2,3), lty=c(1,2,3), lwd=2, bty='n')
+
+
+```
+
+```{r VSI_CIF}
+#| label: fig-LVAD-specific_Cumulative_Incidence.2
+#| fig-cap: "LVAD-specific infections cumulative incidence accounting for competing risks"
+
+# DATA PREPARATION 
+vsi.cmprsk.data <- data %>%
+  select(study_id,li_infection_site.factor,li_sbsi.factor,lvad_date,li_event_date,htx_date,death_date,lastfup) %>%
+  filter(is.na(li_event_date) | li_event_date > lvad_date) %>%
+  mutate(
+    
+    lvad.specific.infection.cmprsk.time = case_when(
+      li_infection_site.factor == "L-VAD specific infection" |
+      li_sbsi.factor == "L-VAD specific infection"
+      ~ as.numeric(li_event_date - lvad_date)/30.4375,
+      !is.na(htx_date)
+      ~ as.numeric(htx_date - lvad_date)/30.4375,
+      is.na(htx_date)
+      ~ as.numeric(lastfup - lvad_date)/30.4375),
+      
+    lvad.specific.infection.cmprsk_event = case_when(
+      li_infection_site.factor == "L-VAD specific infection" | 
+      li_sbsi.factor == "L-VAD specific infection" ~ "vsi",  
+      !is.na(htx_date) ~ "htx",
+      !is.na(death_date) ~ "death",
+      TRUE ~ "cens"),
+    
+    lvad.specific.infection.cmprsk_event = factor(lvad.specific.infection.cmprsk_event,
+                                                  levels = c("cens","vsi","htx","death"))
+    )%>%
+      group_by(study_id) %>%
+      slice_min(lvad.specific.infection.cmprsk.time, with_ties = FALSE)  
+
+# CUMULATIVE INCIDENCE
+
+vsicmprsk <- tidycmprsk::cuminc(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event) ~ 1, data = vsi.cmprsk.data)
+
+options("ggsurvfit.switch-color-linetype" = TRUE)
+
+c <- vsicmprsk %>%
+  ggcuminc(outcome = c("vsi","htx","death")) + 
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 42),breaks = seq(0, 42, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.7),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = ""
+  )
+
+c1 <- vsicmprsk %>%
+  ggcuminc(outcome = c("vsi")) + 
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 42),breaks = seq(0, 42, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.7),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = "LVAD Specific Infection"
+  )
+
+#c
+c1
+
+```
+
+##### Non-LVAD-specific infections cumulative incidence accounting for competing risks
+
+```{r incidenza_cumulativa_infezioni.NON.LVAD.specifiche}
+#| label: fig-NONLVAD-specific_Cumulative_Incidence
+#| fig-cap: "Non-LVAD-Specific cumulative incidence during LVAD support accounting for competing risks"
+
+temp4 <- data %>%
+  filter(redcap_repeat_instrument == "infezioni_lvad") %>%
+  select(study_id, li_infection_site.factor,li_sbsi.factor,
+         li_lvad_infection.factor,li.infection.onset) %>%
+  filter(is.na(li_lvad_infection.factor)) %>% 
+  filter(li.infection.onset>-1) %>% 
+  drop_na(li.infection.onset,li_infection_site.factor) %>% 
+  rename(etime = li.infection.onset) %>% 
+  mutate(status=3) %>% 
+  select(study_id,etime,status)
+   
+cuminc.data2 <-  rbind(temp4,temp2,temp3) %>% 
+  group_by(study_id) %>% 
+  slice_min(etime,with_ties = F) 
+
+cuminc.data2$status <- factor(cuminc.data2$status,0:3, labels=c("censor", "death", "HTX", "NVSI"))
+
+cfit2 <- survfit(Surv(etime, status) ~ 1, cuminc.data2)
+
+#print(cfit2, scale=12*30.4375)
+
+# plot(cfit2, col=c(1,2,3), lty=c(1,2,3),
+#       mark.time=FALSE, lwd=2,  xscale=12*30.4375,
+#       xlab="Years post LVAD", ylab="Probability in State",
+#       main = "Non Specific LVAD Infection Cumulative Incidence")
+# legend(2000,.5,c("death", "HTX", "NVSI"),
+#         col=c(1,2,3), lty=c(1,2,3), lwd=2, bty='n')
+
+# CUMULATIVE INCIDENCE
+cuminc.data2.0 <-cuminc.data2 %>% 
+  mutate(etime = etime/30.4375)
+
+nsicmprsk <- tidycmprsk::cuminc(Surv(etime, status) ~ 1,, data = cuminc.data2.0)
+
+options("ggsurvfit.switch-color-linetype" = TRUE)
+
+d <- nsicmprsk %>%
+  ggcuminc(outcome = c("death", "HTX", "NVSI")) + 
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 42),breaks = seq(0, 42, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.7),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = ""
+  )
+
+d1 <- nsicmprsk %>%
+  ggcuminc(outcome = c("NVSI")) + 
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 42),breaks = seq(0, 42, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.7),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = "Non-LVAD-Specific Infection"
+  )
+
+#d
+d1
+
+```
+
+##### Sepsis cumulative incidence
+
+```{r incidenza_cumulativa_sepsi}
+#| label: fig-Sepsis_Cumulative_Incidence
+#| fig-cap: "Sepsis Cumulative Incidence"
+
+time.to.sepsis <- data %>%
+  filter(li_event_date > lvad_date | is.na(li_event_date)) %>% 
+  mutate(
+    time.to.sepsis_days = case_when(
+      li_sepsi.factor == "Yes" ~ as.numeric(li.infection.onset),
+      li_sepsi.factor == "No" | is.na(li_sepsi.factor)   ~ round(lvad.time * 30.4375)
+    ),
+    status = case_when(
+  li_sepsi.factor == "Yes" ~ 1,
+  li_sepsi.factor == "No" | is.na(li_sepsi.factor) ~ 0
+)
+  ) %>%
+ arrange(study_id, li.infection.onset) %>%
+ group_by(study_id) %>%
+  filter(
+    (any(status == 1) & status == 1 & time.to.sepsis_days == min(time.to.sepsis_days[status == 1], na.rm = TRUE)) |
+    (!any(status == 1) & status == 0 & time.to.sepsis_days == max(time.to.sepsis_days[status == 0], na.rm = TRUE))
+  ) %>%
+  slice(1) %>%  #n case multiple rows satisfy the condition, keep just the first row.
+  ungroup() %>% 
+  select(
+    study_id,
+    #li_sepsi.factor,
+    #lvad.time,
+    #lvad_date,
+    time.to.sepsis_days,
+    status
+  )%>% 
+filter(status==1) %>% 
+  mutate(status = 3) %>% 
+  rename(etime=time.to.sepsis_days)
+
+cuminc.data3 <-  rbind(time.to.sepsis,temp2,temp3) %>% 
+  group_by(study_id) %>% 
+  slice_min(etime,with_ties = F) 
+
+cuminc.data3$status <- factor(cuminc.data3$status,0:3, labels=c("censor", "death", "HTX", "Sepsis"))
+
+cfit3 <- survfit(Surv(etime, status) ~ 1, cuminc.data3)
+
+#print(cfit3, scale=12*30.4375)
+
+# plot(cfit3, col=c(1,2,3), lty=c(1,2,3),
+#       mark.time=FALSE, lwd=2,  xscale=12*30.4375,
+#       xlab="Years post LVAD", ylab="Probability in State",
+#       main = "Sepsis Cumulative Incidence")
+# legend(2000,.2,c("death", "HTX", "Sepsis"),
+#         col=c(1,2,3), lty=c(1,2,3), lwd=2, bty='n')
+
+# CUMULATIVE INCIDENCE
+cuminc.data3.0 <-cuminc.data3 %>% 
+  mutate(etime = etime/30.4375)
+
+sepsis.cmprsk <- tidycmprsk::cuminc(Surv(etime, status) ~ 1,, data = cuminc.data3.0)
+
+options("ggsurvfit.switch-color-linetype" = TRUE)
+
+e <- sepsis.cmprsk %>%
+  ggcuminc(outcome = c("death", "HTX", "Sepsis")) + 
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 42),breaks = seq(0, 42, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.7),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = ""
+  )
+
+e1 <- sepsis.cmprsk %>%
+  ggcuminc(outcome = c("Sepsis")) + 
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 42),breaks = seq(0, 42, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.7),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = "Sepsis"
+  )
+
+#e
+e1
+
+
+```
+
+## MICROBIOLOGY
+
+Infections caused by Gram-positive microorganisms were more prevalent than those due to Gram-negative organisms (@tbl-microorganism). Staphylococci were the most frequently isolated pathogens, accounting for 198 episodes (46.3%), the majority of which were attributed to Staphylococcus aureus (159 episodes, 37.1%), followed by Staphylococcus epidermidis (24 episodes, 5.6%). After staphylococci, the most commonly identified microorganisms were members of the Enterobacteriaceae family (91 episodes, 21.3%), Pseudomonas aeruginosa (60 episodes, 14.1%), and Enterococcus spp. (24 episodes, 5.6%). Among the Enterobacteriaceae, Klebsiella pneumoniae and Escherichia coli were the most frequently encountered. In addition, 8 fungal infections were recorded, including 5 (1.2%) due to Candida albicans and 3 (0.7%) due to Candida parapsilosis.
+
+```{r Identified microorganism}
+#| label: tbl-microorganism
+#| tbl-cap: "Pathogens identified during infection"
+
+# Build the column names
+col_names <- c("li_microorganism.factor", glue("li_microorganism_{2:3}.factor"))
+
+# Map over column names, extract relevant data frames
+microorganism <- map(col_names, ~{
+  data %>%
+    filter(li_event_date > lvad_date) %>%
+    select(
+      study_id,
+      pathogen = !!sym(.x)  # dynamically rename to 'pathogen'
+    )
+}) %>%
+  bind_rows() %>%       # combine all tibbles row-wise
+  drop_na() %>%
+  mutate(pathogen_group = micro_groups(pathogen)) # micro_groups is a function!
+
+
+# 2. Summary table
+micro_summary_table <- microorganism %>%
+  group_by(pathogen_group, pathogen) %>%
+  summarise(
+    total_micro = n(), 
+    .groups = "drop"     #this option remove grouping for subsequent operations
+  ) 
+
+# 3. Subtotals per micro groups
+micro_subtotals <- micro_summary_table %>%
+  group_by(pathogen_group) %>%
+  summarise(
+    pathogen = "Subtotal",
+    total_micro = sum(total_micro),
+    .groups = "drop"
+  ) 
+
+# 4. Combine and arrange
+micro_summary_with_subtotals <- bind_rows(micro_subtotals, micro_summary_table) %>% 
+  mutate(
+    pathogen_group = factor(
+      pathogen_group,
+      levels = c("GramPositive", "GramNegative", "Fungus")
+    ),
+    is_subtotal = (pathogen == "Subtotal")  
+  ) %>%
+  arrange(
+    pathogen_group,           # groups in your factor order
+    desc(is_subtotal),        # subtotals first within group
+    desc(total_micro)         # then microorganisms by descending count
+  ) %>%
+  select(-is_subtotal) %>%
+  mutate(
+    pathogen_group = if_else(pathogen != "Subtotal", "", pathogen_group)
+  )
+
+
+# 5. Display with flextable
+micro_summary_with_subtotals %>%
+rename('TYPE OF MICROORGANISM'= pathogen_group,
+       'MICROORGANISM'= pathogen,
+       'TOTAL COUNTS'= total_micro) %>%
+  flextable() %>%
+  bold(i = ~ MICROORGANISM == "Subtotal", bold = TRUE) %>%
+  bold(part = "header") %>%
+  align(align = "center", part = "all") %>% 
+  autofit()
+
+```
+
+```{r microorganism_class}
+#| label: tbl-microorganism_class
+#| tbl-cap: "Categories of microorganisms identified in infectious episodes"
+
+data <- data %>% 
+    mutate(
+    li_microorganism.factor_class   = micro_family(li_microorganism.factor),
+    li_microorganism_2.factor_class = micro_family(li_microorganism_2.factor),
+    li_microorganism_3.factor_class = micro_family(li_microorganism_3.factor)
+    #li_microorganism.factor_class --> class of pathogen as per function "micro_family"
+    ) 
+
+li_microorganism_class <- data %>%
+  filter(li_event_date > lvad_date) %>%  
+  select(study_id,
+         li_microorganism.factor_class,
+         li_microorganism_2.factor_class,
+         li_microorganism_3.factor_class
+         ) %>%
+  pivot_longer(cols = li_microorganism.factor_class:li_microorganism_3.factor_class, 
+               names_to = "Variable", values_to = "Microorganism_Class") %>%
+  drop_na(Microorganism_Class)
+  
+li_microorganism_class.table <- li_microorganism_class %>%
+  group_by(Microorganism_Class) %>%
+  dplyr::summarize(Counts=n()) %>% 
+  mutate(prop = round(Counts/sum(Counts)*100,1)) %>% 
+  mutate(sort_key = if_else(Microorganism_Class == "Altro", Inf, -Counts)) %>%
+  arrange(sort_key) %>%
+  select(-sort_key) %>% 
+  rename('Microorganism class'=Microorganism_Class,
+         'n'= Counts,
+         '%'= prop) %>%
+  flextable() %>%
+  autofit() %>% 
+  bold(part = "header")
+
+li_microorganism_class.table
+```
+
+### Resistance profile
+
+Multidrug-resistant organisms (MDRO) accounted for 26.2% of all isolates (@tbl-mdro). The most frequently identified MDRO was methicillin-resistant Staphylococcus aureus (MRSA), with 49 episodes (48.5%), followed by extended-spectrum beta-lactamase (ESBL)–producing strains, with 20 episodes (19.8%). Other MDROs included difficult-to-treat (DTR) Pseudomonas aeruginosa and Acinetobacter baumannii (16 isolates, 15.8%), as well as KPC-producing strains (9 isolates, 8.9%).
+
+```{r}
+mdro <- data %>% 
+  filter(redcap_repeat_instrument == "infezioni_lvad") %>%
+  filter(li_event_date > lvad_date) %>%
+  select(study_id,li_mdro.factor) %>%
+  drop_na(li_mdro.factor) %>%
+  group_by(li_mdro.factor) %>%
+  dplyr::summarise(
+    Counts=n(),
+    Patients = n_distinct(study_id)
+  ) %>% 
+  mutate(
+    pt_prop = round(Patients/nrow(ptlist)*100,1),
+    prop = round(Counts/sum(Counts)*100,1),
+         ) %>%
+  select(li_mdro.factor,Patients, pt_prop,Counts,prop) %>%
+  mutate(sort_key = if_else(li_mdro.factor == "Altro", Inf, -Counts)) %>%
+  arrange(sort_key) %>%
+  select(-sort_key)
+
+```
+
+```{r MDRO}
+#| label: tbl-mdro
+#| tbl-cap: "Multi Drug Resistant Organism"
+
+mdro %>% 
+rename('Multidrug Resistant Organism' = li_mdro.factor,
+         'n° of patients'= Patients,
+         '% of patients'= pt_prop,
+         'n° of infections'= Counts,
+         '% of total infections'= prop) %>%  
+  flextable() %>%
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header")
+
+
+```
+
+```{r MDRO}
+#| label: fig-mdro
+#| fig-cap: "Multidrug Resistant Organism"
+
+mdro2 <- mdro %>%
+  mutate(li_mdro.factor = recode(li_mdro.factor,
+    "CARBA-R (non carbapenemasi, Enterobacterales)" = "CARBA-R",
+    "DTR (P.aeruginosa e A.baumannii)" = "DTR",
+    "Vancomicina R (non S.aureus)" = "Vancomicina R" 
+  ))
+
+ggplot(mdro2, aes(x = reorder(li_mdro.factor, -prop), y = prop, fill = li_mdro.factor)) +
+  geom_bar(stat = "identity") +
+  geom_text(aes(label = paste0(prop, "%")), vjust = -0.5, size = 3.5) +
+  labs(
+    title = "Multidrug Resistant Organism",
+    x = "",
+    y = "%"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_brewer(palette = "Paired") +  # palette Paired fino a 12 colori
+  guides(fill = "none")
+
+```
+
+```{r atb.class}
+
+data <- data %>%
+  mutate(
+    li_atb_1.factor_class = classify_atb(li_atb_1.factor),
+    li_atb_2.factor_class = classify_atb(li_atb_2.factor),
+    li_atb_3.factor_class = classify_atb(li_atb_3.factor),
+    li_atb_4.factor_class = classify_atb(li_atb_4.factor)
+  )
+
+```
+
+## ANTIBIOTIC USE
+
+In our cohort, β-lactams with anti-anaerobic activity were the most frequently prescribed antibiotics (6,441 DOT, see @tbl-atb and @fig-atb), followed by trimethoprim-sulfamethoxazole (5,144 DOT) and doxycycline (3,356 DOT). Amoxicillin-clavulanate predominated among anti-anaerobic β-lactams (5,189 DOT), whereas piperacillin-tazobactam accounted for 1,252 DOT. Meropenem was the most used carbapenem (939 DOT), and oxacillin (886 DOT) was commonly administered among β-lactams without anti-anaerobic activity. Overall, β-lactams represented 10,545 DOT, of which 2,921 (27.7%) were agents active against Pseudomonas aeruginosa. The majority (7,628 DOT, 72.3%) were agents lacking anti-Pseudomonas activity. Within the anti-Pseudomonas group, piperacillin-tazobactam (1,252 DOT) and carbapenems (1,013 DOT) were most frequently used, followed by ceftazidime, cefepime, and aztreonam (656 DOT combined).
+
+```{r ATB_CONSUMPTION}
+#| label: tbl-atb
+#| tbl-cap: "Antibiotic utilization"
+
+# 1. Build `atb` dataset from 4 antibiotic slots
+atb <- map_dfr(1:4, ~{
+  data %>%
+    filter(li_event_date > lvad_date) %>%
+    select(
+      study_id,
+      atb = !!sym(glue("li_atb_{.x}.factor")),
+      start = !!sym(glue("li_atb_{.x}_start")),
+      end = !!sym(glue("li_atb_{.x}_end"))
+    )
+}) %>%
+  drop_na() %>%
+  mutate(
+    atbdays = as.numeric(end - start),
+    atb_class = classify_atb(atb) #classify_atb is a function!
+  )
+
+
+# 2. Summary table: total + mean duration per antibiotic
+summary_table <- atb %>%
+  group_by(atb_class, atb) %>%
+  summarise(
+    total_days = sum(atbdays, na.rm = TRUE),
+    mean_days = round(mean(atbdays, na.rm = TRUE), 1),
+    sd_days = round(sd(atbdays, na.rm = TRUE), 1),
+    .groups = "drop"
+  ) %>% 
+mutate(
+  mean_sd = ifelse(
+    is.na(sd_days),
+    as.character(mean_days),
+    paste0(mean_days, " (", sd_days, ")")
+  )
+)
+
+# 3. Subtotals per antibiotic class
+subtotals <- summary_table %>%
+  group_by(atb_class) %>%
+  summarise(
+    atb = "Subtotal",
+    total_days = sum(total_days),
+    mean_days = NA_real_,
+    mean_sd = "",
+    .groups = "drop"
+  )
+
+# 4. Combine and arrange
+summary_with_subtotals <- bind_rows(subtotals, summary_table) %>%
+  arrange(atb_class, desc(atb == "Subtotal")) %>%
+  mutate(
+    atb_class = if_else(atb != "Subtotal", "", atb_class)
+  ) %>% 
+  select(-mean_days,-sd_days)
+
+# 5. Display with flextable
+summary_with_subtotals %>%  
+rename('CLASS'= atb_class,
+       'ANTIBIOTIC'= atb,
+       'TOTAL DAYS'= total_days,
+       'MEAN DAYS (SD) ' = mean_sd) %>%
+  flextable() %>%
+  bold(i = ~ ANTIBIOTIC == "Subtotal", bold = TRUE) %>%
+  bold(part = "header") %>%
+  align(align = "center", part = "all") %>% 
+  autofit()
+
+```
+
+```{r ATB_CONSUMPTION_Graph}
+#| label: fig-atb
+#| fig-cap: "DOT per Antibiotic Class"
+
+plot_data <- summary_with_subtotals %>%
+  filter(atb == "Subtotal")
+
+# Prendiamo 8 colori da Set1 e 8 da Set3
+colors <- c(brewer.pal(8, "Set1"), brewer.pal(8, "Set3"))
+
+ggplot(plot_data, aes(x = atb_class, y = total_days, fill = atb_class)) +
+  geom_col() +
+  labs(title = "DOT per Antibiotic Class",
+       x = "",
+       y = "Days of therapy (DOT)",
+       fill = "Classe") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = colors) +
+  guides(fill = "none")
+
+
+```
+
+## OVERALL TRANSPLANTATION AND MORTALITY
+
+In BTT/BTC patients, mortality increased from 12% at 6 months to 26% at 24 months, while transplantation rose from 6.5% to 29% over the same period. In DT patients, cumulative mortality increased from 44% at 6 months to 48% at 24 months, indicating substantially higher short- to mid-term mortality compared with BTT/BTC patients (@fig-cuminc2).
+
+```{r incidenza cumulativa di morte e trapianto - stratificata}
+#| label: fig-cuminc2
+#| fig-cap: "Cumulative Incidence of Death and Heart Transplant after LVAD (stratified by LVAD indication)"
+
+# data preparation
+survdata <- data %>% 
+  select(study_id, lvad_date, htx_date, death_date, lastfup, lvad_ind.factor) %>% 
+  unique() %>%
+  mutate(
+    lvad_ind.factor = factor(
+      ifelse(
+        lvad_ind.factor == "DT - Destination Therapy",
+        "DT",
+        "BTT/BTC"
+      ),
+      levels = c("DT", "BTT/BTC")
+    ),
+    time.to.event = case_when(
+      !is.na(htx_date) ~ as.numeric(htx_date - lvad_date) / 30.4375,
+      is.na(htx_date) & !is.na(death_date) ~ as.numeric(death_date - lvad_date) / 30.4375,
+      is.na(htx_date) & is.na(death_date) ~ as.numeric(lastfup - lvad_date) / 30.4375
+    ),
+    event = case_when(
+      !is.na(htx_date) ~ "htx",
+      is.na(htx_date) & !is.na(death_date) ~ "death",
+      is.na(htx_date) & is.na(death_date) ~ "lastfup"
+    ),
+    event = factor(event, levels = c("lastfup", "death", "htx"))
+  )
+
+# ---- Filter and plot for BTT/BTC
+surv_btt <- survdata %>% filter(lvad_ind.factor == "BTT/BTC")
+ci_btt <- cuminc(Surv(time.to.event, event) ~ 1, data = surv_btt)
+
+plot_btt <- ci_btt %>%
+  ggcuminc(outcome = c("death", "htx")) +
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 36),breaks = seq(0, 36, by = 6),name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.8),breaks = seq(0, 1, by = 0.1),name = "Cumulative Incidence")
+  ) +
+  labs(
+    title = "Cumulative Incidence (BTT/BTC)"
+    
+  )
+
+# ---- Filter and plot for DT
+surv_dt <- survdata %>% filter(lvad_ind.factor == "DT")
+ci_dt <- survfit(Surv(time.to.event, event) ~ 1, data = surv_dt)
+
+plot_dt <- ggcuminc(ci_dt, outcome = "death") +
+  add_confidence_interval() +
+  add_risktable() +
+  scale_ggsurvfit(
+    x_scales = list(limits = c(0, 36), breaks = seq(0, 36, 6), name = "Time (months)"),
+    y_scales = list(limits = c(0, 0.8),breaks = seq(0, 1, by = 0.1))
+  ) +
+  labs(title = "Mortality (DT)")
+
+# ---- Combine plots side-by-side
+#plot_btt 
+#plot_dt
+
+plot_btt + plot_dt
+
+
+```
+
+```{r}
+#| label: tbl-btt
+#| tbl-cap: "Cumulative Incidence of Death and Heart Transplant after LVAD (bridge to transplant/candidacy)"
+
+tbl_btt <-
+  ci_btt %>%
+  tbl_cuminc(times = seq(6,36, by = 6), 
+             outcomes = c("death", "htx"),
+             label_header = "**Month {time}**")
+
+tbl_btt
+
+```
+
+```{r}
+#| label: tbl-dt
+#| tbl-cap: "Cumulative Incidence of Death after LVAD (destination therapy)"
+
+
+tbl_dt <- tbl_survfit(ci_dt,  times = seq(6, 36, by = 6))
+
+tbl_dt
+
+```
+
+# DISCUSSION
+
+\[...\]
+
+In our cohort, the cumulative incidence of LVAD-specific and non-LVAD-specific infections increased steadily, reaching nearly 50% by 24 months. These findings are consistent with prior reports describing higher infection rates early after implantation that decline with longer support.
+
+# BIBLIOGRAPHY
+
+::: {#refs}
+:::
+
+# SUPPLEMENTARY MATERIAL
+
+### FOLLOW UP VARIABLES
+
+#### Sites of infection
+
+```{r infection_site}
+#| label: tbl-infection_site
+#| tbl-cap: "Sites of infection in LVAD patients"
+
+infection_site %>% 
+  rename('SEDE INFEZIONE' = li_infection_site.factor,
+         'n° of patients'= Patients,
+         '% of patients'= pt_prop,
+         'n° of infections'= Counts,
+         '% of total infections'= prop) %>% 
+  flextable() %>%
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header")
+
+ 
+  
+
+```
+
+#### Secondary batteremia
+
+```{r SECONDARY_BACTEREMIA}
+#| label: tbl-bacteremia_site
+#| tbl-cap: "Secondary bacteraemia in LVAD patients"
+
+sbsi.data %>% 
+  rename('BATTERIEMIA SECONDARIA' = li_sbsi.factor,
+         'n° of patients'= Patients,
+         '% of patients'= pt_prop,
+         'n° of infections'= Counts,
+         '% of total secondary bacteremia'= prop) %>%  
+  flextable() %>%
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header")
+
+```
+
+#### LVAD Specific Infections
+
+```{r LVAD_SPECIFIC_INFECTION}
+#| label: tbl-vsi
+#| tbl-cap: "L-VAD Specific Infections"
+  
+vsi %>% 
+  rename('LVAD-specific infection' = li_lvad_infection.factor,
+         'n° of patients'= Patients,
+         '% of patients'= pt_prop,
+         'n° of infections'= Counts,
+         '% of total LVAD-specific infections'= prop) %>%
+  flextable() %>%
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header")
+
+```
+
+#### Sepsis
+
+```{r SEPSI}
+#| label: tbl-sepsi
+#| tbl-cap: "Septic episodes"
+
+sepsi %>% 
+  filter(li_sepsi.factor != "No") %>%
+  select(li_sepsi.factor,Patients, pt_prop,Counts,prop) %>% 
+  rename('Sepsi' = li_sepsi.factor,
+         'n° of patients with sepsis'= Patients,
+         '% of patients with sepsis'= pt_prop,
+         'n° of septic episodes'= Counts,
+         '% of septic episodes among all infections'= prop, 
+         ) %>%
+  flextable() %>%
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header")
+
+```
+
+#### Table: All infections cumulative incidence
+
+```{r}
+#| label: tbl-allicmprsk
+#| tbl-cap: "All infections cumulative incidence accounting for competing risks"
+
+tbl_b <-
+  inf.cmprsk %>%
+  tbl_cuminc(times = seq(6,36, by = 6), 
+             outcomes = c("death", "HTX", "Infection"),
+             label_header = "**Month {time}**")
+
+tbl_b
+```
+#### Table: LVAD-specific infections cumulative incidence
+
+```{r}
+#| label: tbl-vsicmprsk
+#| tbl-cap: "LVAD-specific infections cumulative incidence accounting for competing risks"
+
+tbl_c <-
+  vsicmprsk %>%
+  tbl_cuminc(times = seq(6,36, by = 6), 
+             outcomes = c("vsi","htx","death"),
+             label_header = "**Month {time}**")
+
+tbl_c
+```
+
+#### Table: Non-LVAD-specific infections cumulative incidence
+
+```{r}
+#| label: tbl-nsicmprsk
+#| tbl-cap: "Non-LVAD-specific infections cumulative incidence accounting for competing risks"
+
+tbl_d <-
+  nsicmprsk %>%
+  tbl_cuminc(times = seq(6,36, by = 6), 
+             outcomes = c("death", "HTX", "NVSI"),
+             label_header = "**Month {time}**")
+
+tbl_d
+```
+
+#### Table: Sepsis cumulative incidence
+
+```{r incidenza_cumulativa_sepsi2}
+#| label: tbl-Sepsis_Cumulative_Incidence
+#| tbl-cap: "Sepsis Cumulative Incidence"
+
+# times of interest (every 6 months up to 36)
+times_of_interest <- seq(6, 36, by = 6)
+
+# summary at those times
+summary_fit <- summary(cfit3, times = times_of_interest*30.4375)
+
+# Build table for Sepsis cumulative incidence
+# (adjust the column index of pstate/lower/upper depending on order of states)
+incidence_table <- data.frame(
+  Months    = summary_fit$time/30.4375,
+  Incidence = round(summary_fit$pstate[, "Sepsis"], 2),
+  "Lower CI" = round(summary_fit$lower[, "Sepsis"], 2),
+  "Upper CI" = round(summary_fit$upper[, "Sepsis"], 2)
+)
+
+# Pretty table
+
+incidence_table %>%
+  flextable() %>%
+  align(align = "center", part = "all") %>%
+  autofit() %>%
+  bold(part = "header")
+
+```
+
+### BASELINE VARIABLES
+
+```{r}
+
+# a. Which of the predictors are quantitative, and which are qualitative?
+ 
+# Quantitative: 
+vars_quantitative <- c("age") #,"bmi"
+ # Qualitative:
+vars_qualitative <- c("sex.factor", "intermacs.factor", "lvad_mod.factor", "lvad_ind.factor","cmp_aethiology.factor","hyper.factor","dyslip.factor","diabetes.factor","renal_insuff.factor","smoke.factor","coronary_dis.factor","infarction.factor","arrhyt.factor","valve_rep.factor","pm.factor","surgery.factor")
+
+data_exp <- data %>% 
+  filter (is.na(redcap_repeat_instance)) %>% 
+  select(study_id,all_of(c(vars_quantitative, vars_qualitative)))
+
+
+# Loop over all categorical variables
+for (var in vars_qualitative) {
+  df_filtered <- data_exp %>%
+    filter(!is.na(.data[[var]]))   # remove NAs for the current variable
+  
+  p <- ggplot(df_filtered, aes_string(x = var, y = "age", fill = var)) +
+    geom_violin(trim = FALSE, alpha = 0.5) +
+    geom_boxplot(width = 0.1, outlier.shape = NA) +
+    labs(title = paste("Age distribution by", var)) +
+    theme_minimal()
+  
+  #print(p)
+  
+}
+
+freq_tables <- map(vars_qualitative, function(var) {
+  data_exp %>%
+    count(!!sym(var)) %>%
+    mutate(Proportion = round(n / sum(n),2)) %>%
+    rename(Level = !!sym(var)) %>%
+    mutate(Variable = var, .before = 1)
+})
+
+# Combine all into one big table
+freq_summary <- bind_rows(freq_tables)
+
+freq_summary %>% 
+  gt()
+
+
+```
+
+Age interquantiles ranges
+
+```{r age_IQR}
+IQRage <- summary(data_exp$age) %>% 
+  print()
+```
+
+BMI interquantiles ranges
+
+```{r bmi_IQR}
+IQRbmi <- summary(data$bmi) %>% 
+    print()
+
+```
+
+# COMPETING RISK ANALYSIS
+
+Traditional Cox proportional hazards models assume that censoring is independent of the event of interest. In the context of left ventricular assist device (LVAD) support, however, events such as death or heart transplantation preclude the subsequent occurrence of LVAD-specific infection (VSI). Treating these as simple censoring events would violate the assumption of non-informative censoring and yield biased risk estimates. To more accurately quantify the risk of infection over time, we adopted a competing-risks framework, which accounts for the fact that death and transplantation preclude infection and provides a clinically meaningful estimate of its cumulative probability. Two complementary approaches were implemented. Cause-specific hazard (CSH) models were used to estimate the instantaneous risk of each event type—VSI, death, or transplantation—conditional on being event-free, offering etiologic insight into factors associated with each outcome. The Fine–Gray (FG) subdistribution hazard model was applied to evaluate the effect of covariates on the cumulative incidence function (CIF), directly modeling event probabilities in the presence of competing risks. This dual approach allows both mechanistic interpretation (via CSH) and clinical risk prediction (via FG). The proportional hazards assumption was assessed using Schoenfeld residuals, with no major violations observed.
+
+```{r}
+#TAB1VARS CODE (for covariates)
+tab1vars <- data %>% 
+  filter(is.na(redcap_repeat_instance)) %>%
+  select(study_id,
+         age,sex.factor,bmi,intermacs.factor,lvad_mod.factor,lvad_ind.factor,
+         cmp_aethiology.factor,hyper.factor,dyslip.factor,diabetes.factor,
+         renal_insuff.factor,smoke.factor,coronary_dis.factor,
+         infarction.factor,arrhyt.factor,valve_rep.factor,pm.factor,
+         surgery.factor) %>%  #,creatinina,drugs.factor
+  mutate(across(where(is.factor), droplevels))
+ 
+tab1vars <- tab1vars %>%
+  left_join(select(lvad.specific.infection.cov, #in left join, you can specify the object and the variables taken from the object
+                   study_id,                        
+                   lvad.specific.infection_event.factor), by = "study_id") %>%
+  left_join(select(lvad.era,
+                   study_id,
+                   lvad.era), by = "study_id")
+```
+
+```{r VSI_CIF_data.prep}
+
+# DATA PREPARATION 
+vsi.cmprsk.data <- data %>%
+  select(study_id,li_infection_site.factor,li_sbsi.factor,lvad_date,li_event_date,htx_date,death_date,lastfup) %>%
+  filter(is.na(li_event_date) | li_event_date > lvad_date) %>%
+  mutate(
+    
+    lvad.specific.infection.cmprsk.time = case_when(
+      li_infection_site.factor == "L-VAD specific infection" |
+      li_sbsi.factor == "L-VAD specific infection"
+      ~ as.numeric(li_event_date - lvad_date)/30.4375,
+      !is.na(htx_date)
+      ~ as.numeric(htx_date - lvad_date)/30.4375,
+      is.na(htx_date)
+      ~ as.numeric(lastfup - lvad_date)/30.4375),
+      
+    lvad.specific.infection.cmprsk_event = case_when(
+      li_infection_site.factor == "L-VAD specific infection" | 
+      li_sbsi.factor == "L-VAD specific infection" ~ "vsi",  
+      !is.na(htx_date) ~ "htx",
+      !is.na(death_date) ~ "death",
+      TRUE ~ "cens"),
+    
+    lvad.specific.infection.cmprsk_event = factor(lvad.specific.infection.cmprsk_event,
+                                                  levels = c("cens","vsi","htx","death"))
+    )%>%
+      group_by(study_id) %>%
+      slice_min(lvad.specific.infection.cmprsk.time, with_ties = FALSE) %>%
+  ungroup()
+  
+vsi.cmprsk.data <- vsi.cmprsk.data %>% 
+  left_join(tab1vars,by = "study_id") %>% 
+  mutate(intermacs = factor(case_when(
+    
+    intermacs.factor == "1. Critical cardiogenic shock" |
+    intermacs.factor == "2. Progressive decline on inotropic support" |
+    intermacs.factor == "3. Stable but inotrope dependent" |
+    intermacs.factor == "4. Resting symptoms home on oral therapy" 
+    ~ "INTERMACS 1-4",
+    
+    intermacs.factor == "5. Exertion intolerant" |
+    intermacs.factor == "6. Exertion limited" |
+    intermacs.factor == "7. Advanced NYHA Class III symptoms"
+    ~ "INTERMACS 5-7",
+    TRUE ~ NA_character_
+      ),
+    levels=c("INTERMACS 5-7","INTERMACS 1-4")),
+
+    
+    lvad.model = factor(case_when(
+    lvad_mod.factor == "HeartMate 2" ~ "HM2",
+    lvad_mod.factor == "HeartMate 3" |
+    lvad_mod.factor == "HeartWare HVAD" |
+    lvad_mod.factor == "Reliant AVAD" |
+    lvad_mod.factor == "Incor Berlin Heart" ~ "Other LVADs",
+    TRUE ~ NA_character_
+    ),
+    levels=c("Other LVADs","HM2")),
+    
+    aethiology = factor(case_when(
+      cmp_aethiology.factor == "Ischemic" ~ "Ischemic",
+      TRUE ~ "Non-Ischemic"
+    ), levels=c("Non-Ischemic","Ischemic")),
+    
+    indication = factor(case_when(
+      lvad_ind.factor == "BTT - Bridge to Transplant" |
+      lvad_ind.factor == "BTC - Bridge to Candidacy" |
+      lvad_ind.factor == "BTR - Bridge to Recovery" ~ "BTT/BTC",
+      lvad_ind.factor == "DT - Destination Therapy" ~ "DT",
+      TRUE ~ NA_character_
+    ), levels=c("BTT/BTC","DT")),
+    
+    myocardial.infarction = factor(case_when(
+      infarction.factor == "no" ~ "No",
+      infarction.factor == "< 90 gg" |
+      infarction.factor == ">90 gg" ~ "Yes",
+      TRUE ~ NA_character_
+    ), levels=c("No","Yes")),
+  )
+
+frelevel <- function(x) {factor(x,levels=c("No","Yes"))}
+
+vsi.cmprsk.data <- vsi.cmprsk.data %>% 
+  mutate(across(c(18:23, 25:28), ~ frelevel(.)))
+
+label(vsi.cmprsk.data$diabetes.factor)="Diabetes"
+label(vsi.cmprsk.data$renal_insuff.factor)="Renal failure"
+
+vsi.cmprsk.predictors <- names(vsi.cmprsk.data[c(11:12,18:23,25:35)]) 
+
+```
+
+#### Cause-specific hazard models
+
+To investigate determinants of LVAD-specific infection and competing outcomes, we fitted cause-specific Cox proportional hazards models for infection, heart transplantation, and death. Covariates included age, diabetes, and renal failure, selected based on clinical relevance and prior evidence. In the multivariable analysis, younger age at LVAD implantation was independently associated with a higher instantaneous risk of LVAD-specific infection (HR 0.96 per year; 95% CI 0.93–0.98; p \< 0.001). Neither diabetes (HR 1.41; 95% CI 0.82–2.42; p = 0.20) nor renal failure (HR 1.39; 95% CI 0.82–2.34; p = 0.20) were significantly associated with infection risk. No covariates reached statistical significance for heart transplantation, although age showed a non-significant inverse trend (HR 0.96; 95% CI 0.91–1.02; p = 0.20). Diabetes appeared to preclude transplantation (HR ≈ 0.00; 95% CI 0.00–∞; p \> 0.90), likely reflecting the very low number of diabetic patients undergoing transplant. In contrast, older age was significantly associated with a higher instantaneous risk of death (HR 1.07 per year; 95% CI 1.01–1.13; p = 0.026). Neither diabetes (HR 0.86; 95% CI 0.37–2.00; p = 0.70) nor renal failure (HR 1.52; 95% CI 0.73–3.13; p = 0.30) had significant associations with mortality. These results suggest that age exerts opposing effects on infection and death hazards—higher infection risk among younger patients and higher mortality among older patients—while diabetes and renal failure had limited influence across all outcomes.
+
+```{r}
+#| label: tbl-CS.hazard
+#| tbl-cap: "Cause-specific hazard models"
+
+# Cause-specific hazard: LVAD-specific infection
+multi.cox.vsi.risk <- vsi.cmprsk.data %>% 
+  coxph(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event == 'vsi') ~
+          age +
+          diabetes.factor +
+          renal_insuff.factor,
+        data=.)
+
+tbl_infection <-
+multi.cox.vsi.risk %>% 
+  tbl_regression(exp = TRUE) 
+
+# Cause-specific hazard: Heart Transplant 
+multi.cox.htx.risk <- vsi.cmprsk.data %>% 
+  coxph(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event == 'htx') ~
+          age +
+          diabetes.factor +
+          renal_insuff.factor,
+        data=.)
+
+tbl_transplant <- multi.cox.htx.risk %>% 
+  tbl_regression(exp = TRUE) 
+
+# Cause-specific hazard: Death 
+multi.cox.death.risk <- vsi.cmprsk.data %>% 
+  coxph(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event == 'death') ~
+          age +
+          diabetes.factor +
+          renal_insuff.factor,
+        data=.)
+
+tbl_death <- multi.cox.death.risk %>% 
+  tbl_regression(exp = TRUE) 
+  
+# Multivariate Cox-PH table
+
+tbl_merged <- tbl_merge(
+  tbls = list(tbl_infection, tbl_transplant, tbl_death),
+  tab_spanner = c("**LVAD-Specific \nInfection**", "**Heart \nTransplantation**", "**Death**")
+) %>% 
+  as_gt() %>% 
+  tab_header(
+    title = md("Cause-specific hazard models"))
+
+tbl_merged
+```
+
+```{r}
+#| label: fig-CSH.CIF
+#| fig-cap: "Cause-Specific CIF Curves for Competing Risks"
+
+#  model estimated CIF;
+#  it's possible to add in confidence interval using confidence interval of the estimated survival;
+CIF.cox <- data.frame(
+  
+  CIF = c(
+    1- survfit(multi.cox.vsi.risk)$surv,
+    1- survfit(multi.cox.death.risk)$surv,
+    1- survfit(multi.cox.htx.risk)$surv),
+  
+  time = c(
+    survfit(multi.cox.vsi.risk)$time,
+    survfit(multi.cox.death.risk)$time,
+    survfit(multi.cox.htx.risk)$time),
+  
+  event = c(
+    rep("LVAD-specific infection", length(survfit(multi.cox.vsi.risk)$time)),
+    rep("Death", length(survfit(multi.cox.death.risk)$time)),
+    rep("Heart Transplant", length(survfit(multi.cox.htx.risk)$time)))
+  
+  )
+
+CIF.cox %>%
+  ggplot( aes(x=time, y=CIF, group=event, color=event)) +
+    geom_line()+
+  ylim(0,1)+
+  xlab("Months")+
+  ylab("Cause-specific Cox model estimate Cumulative Incidence")+
+  coord_cartesian(xlim = c(0, 36))
+
+```
+
+#### Subdistribution hazard models
+
+Results from the Fine–Gray subdistribution hazard models (@tbl-FG.hazard) were consistent with those from the cause-specific analyses. Older age remained significantly associated with a lower cumulative incidence of LVAD-specific infection (HR = 0.96; 95% CI 0.95–0.98; p \< 0.001) and a higher cumulative incidence of death (HR = 1.09; 95% CI 1.02–1.16; p = 0.007). Age was not significantly related to the likelihood of transplantation (p = 0.3). Diabetes demonstrated a borderline association with higher infection risk (HR = 1.57; 95% CI 0.98–2.49; p = 0.059) but was strongly associated with a markedly lower likelihood of transplantation (HR ≈ 0.00; p \< 0.001). Renal failure was not significantly associated with any outcome.
+
+```{r Fine-Gray subdistribution hazards model}
+
+primary.outcome <- finegray(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event)~ age +  diabetes.factor + renal_insuff.factor, data = vsi.cmprsk.data,etype = "vsi")
+
+first.competing <- finegray(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event)~ age +  diabetes.factor + renal_insuff.factor, data = vsi.cmprsk.data,etype = "death")
+
+second.competing <- finegray(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event)~ age + diabetes.factor + renal_insuff.factor, data = vsi.cmprsk.data,etype = "htx")
+
+fgfit4_1 <- coxph(Surv(fgstart, fgstop, fgstatus) ~ age + diabetes.factor + renal_insuff.factor, data=primary.outcome, weight= fgwt)
+
+fgfit4_2 <- coxph(Surv(fgstart, fgstop, fgstatus) ~ age + diabetes.factor + renal_insuff.factor, data=first.competing, weight= fgwt)
+
+fgfit4_3 <- coxph(Surv(fgstart, fgstop, fgstatus) ~ age + diabetes.factor + renal_insuff.factor, data=second.competing, weight= fgwt)
+
+        
+```
+
+```{r}
+#| label: tbl-FG.hazard
+#| tbl-cap: "Fine–Gray subdistribution hazard models"
+
+tbl_fg_vsi <- fgfit4_1 %>% 
+  tbl_regression(exp = TRUE) 
+
+tbl_fg_death <- fgfit4_2 %>% 
+  tbl_regression(exp = TRUE) 
+
+tbl_fg_htx <- fgfit4_3 %>% 
+  tbl_regression(exp = TRUE) 
+
+tbl_fg_merged <- tbl_merge(
+  tbls = list(tbl_fg_vsi, tbl_fg_htx, tbl_fg_death),
+  tab_spanner = c("**LVAD-Specific Infection**",
+                  "**Heart Transplantation**",
+                  "**Death**")
+) %>%
+  as_gt() %>%
+  tab_header(
+    title = md("Fine–Gray Subdistribution Hazard Models")
+  )
+
+tbl_fg_merged
+```
+
+```{r}
+#| label: fig-FG.CIF
+#| fig-cap: "Sub-distribution hazard CIF Curves for Competing Risks"
+
+# model predicted CIF;
+CIF.fg <- data.frame(
+  CIF = c(1- survfit(fgfit4_1)$surv,1- survfit(fgfit4_2)$surv,1- survfit(fgfit4_3)$surv),
+  time = c(survfit(fgfit4_1)$time,survfit(fgfit4_2)$time,survfit(fgfit4_3)$time),
+  event = c(rep("LVAD-specific infection", length(survfit(fgfit4_1)$time)),
+            rep("Death", length(survfit(fgfit4_2)$time)),
+            rep("Heart Transplant", length(survfit(fgfit4_3)$time))))
+
+CIF.fg %>%
+  ggplot(aes(x=time, y=CIF, group=event, color=event)) +
+    geom_line()+
+  ylim(0,1)+
+  xlab("Months")+
+  ylab("Fine-Gray model estimate Cumulative Incidence")+
+  coord_cartesian(xlim = c(0, 36))
+```
+
+#### Model comparisons
+
+Overall, the two modeling approaches yielded concordant results. Both identified age as a significant determinant of LVAD-specific infection and death, though with opposite directions of effect—younger age increased infection risk, while older age increased mortality. Neither approach identified renal failure as a significant predictor of any outcome. The apparent suppressive effect of diabetes on transplantation likelihood was also consistent across models. The main difference lies in interpretation: the CSH model reflects the instantaneous risk among event-free individuals (etiologic perspective), whereas the Fine–Gray model quantifies the cumulative probability of events in the presence of competing outcomes (predictive perspective). Accordingly, the Fine–Gray CIF curves integrate the effect of competing events, yielding slightly lower cumulative infection probabilities over time compared to the cause-specific estimates (@fig-CIF).
+
+```{r}
+#| label: fig-CIF
+#| fig-cap: "CIF:Comparing Cause-Specific and Fine–Gray Models"
+
+# combine cox and fg CIF;
+CIF <- rbind(CIF.cox, CIF.fg)
+CIF <- CIF %>% mutate(method = c(rep("Cox",nrow(CIF.cox)),rep("F-G",nrow(CIF.fg))))
+
+ggplot(CIF, aes(
+  x = time,
+  y = CIF,
+  colour = event,        
+  linetype = method,    
+  group = interaction(event, method)
+)) +
+  geom_line(size = 1) +
+  scale_linetype_manual(values = c("solid", "dashed")) +  
+  ylim(0, 1) +
+  xlab("Months") +
+  ylab("Model-estimated Cumulative Incidence") +
+  coord_cartesian(xlim = c(0, 36)) 
+```
+
+#### Checking model assumptions
+
+```{r}
+
+cox.zph(multi.cox.vsi.risk)
+cox.zph(multi.cox.death.risk)
+cox.zph(multi.cox.htx.risk)
+cox.zph(fgfit4_1)
+cox.zph(fgfit4_2)
+cox.zph(fgfit4_3)
+
+# for Schoenfeld residuals
+# ggcoxzph(cox.zph(multi.cox.vsi.risk))
+```
+
+```{r}
+vsi.cmprsk.data %>% 
+	coxphuni(dependent = "Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event == 'vsi' )",
+	         explanatory = vsi.cmprsk.predictors) %>%  
+	fit2df()%>% 
+  flextable() %>%
+    add_header_lines(values = "Univariate 
+                     Cause-specific hazard regression: VAD specific infection") %>% 
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header")
+
+```
+
+```{r}
+
+vsi.cmprsk.data %>% 
+	coxphuni(dependent = "Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event == 'htx' )",
+	         explanatory = vsi.cmprsk.predictors) %>%    
+	fit2df()%>% 
+  flextable() %>%
+    add_header_lines(values = "Univariate 
+                     Cause-specific hazard regression: Heart Transplant") %>% 
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header")
+
+
+```
+
+```{r}
+
+vsi.cmprsk.data %>% 
+	coxphuni(dependent = "Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event == 'death')",
+	         explanatory = vsi.cmprsk.predictors) %>%    
+	fit2df()%>% 
+  flextable() %>%
+    add_header_lines(values = "Univariate 
+                     Cause-specific hazard regression: Death") %>% 
+  align(align = "center", part = "all") %>% 
+  autofit() %>% 
+  bold(part = "header")
+
+
+```
+
+```{r}
+# CIF comparison between 2 or more groups (renal failure)
+
+fit <- tidycmprsk::cuminc(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event) ~ renal_insuff.factor, data = vsi.cmprsk.data)
+
+# fit %>% 
+#  tbl_cuminc(
+#    times =c(3,6,9,12), 
+#    outcome = c("vsi","htx","death"),
+#    label_header = "**Months {time}**") %>% 
+#  add_p() %>% 
+#  as_gt() %>% 
+#  gt::tab_source_note(gt::md("htx=Heart Transplanation; vsi=LVAD Specific Infection"))
+
+
+```
+
+```{r}
+
+# CIF comparison between 2 or more groups (diabetes)
+
+fit2 <- tidycmprsk::cuminc(Surv(lvad.specific.infection.cmprsk.time, lvad.specific.infection.cmprsk_event) ~ diabetes.factor, data = vsi.cmprsk.data)
+
+#fit2 %>% 
+#  tbl_cuminc(
+#    times =c(3,6,9,12), 
+#    outcome = c("vsi","htx","death"),
+#    label_header = "**Months {time}**") %>% 
+#  add_p() %>% 
+#  as_gt() %>% 
+#  gt::tab_source_note(gt::md("htx=Heart Transplanation; vsi=LVAD Specific Infection"))
+
+
+```
